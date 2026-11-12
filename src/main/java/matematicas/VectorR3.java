@@ -145,7 +145,7 @@ public final class VectorR3 {
      * @return norma del vector.
      */
     public double norma() {
-	// Calulamos la suma de cuadrados de la norma y verificamos el desbordamiento.
+	// Calculamos la suma de cuadrados de la norma y verificamos el desbordamiento.
 	double valor = verificarDesbordamiento(this.x * this.x + this.y * this.y + this.z * this.z, "norma", toString(), null);
         // Retornamos la norma del vector.
         return Math.sqrt(valor);
@@ -220,7 +220,7 @@ public final class VectorR3 {
             return false;
         }
         
-        // Conversion a VectorR3 ed obj.
+        // Convertimos a VectorR3 el obj.
         VectorR3 otro = (VectorR3) obj;
         
         // Comparamos componente a componente y devolvemos el resultado.
