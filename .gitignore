@@ -1,0 +1,16 @@
+# Archivos generados por Maven
+target/
+
+# Archivos compilados
+*.class
+
+# Archivos de editores
+.vscode/
+.idea/
+*.iml
+
+# Archivos temporales
+*.log
+*.swp
+*~
+.DS_Store
