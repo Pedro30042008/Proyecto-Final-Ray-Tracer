@@ -26,13 +26,13 @@ public class LectorEscenaJsonTest {
      * @throws IOException
      */
     @Test
-    public void debeLeerDimensionesDeImagen() throws IOException {
+    public void debeLeerDimensionesDeEscenaCompleta() throws IOException {
 
         /* Arrange
         Por comodidad, los archivos para tester se encontraran en esta ruta
         despues implementaremos en terminal
         */
-        String ruta = "src/test/resources/escenas/prueba_dimensiones_corr.json";
+        String ruta = "src/test/resources/escenas/prueba_dimensiones_IMPL-COMPLETAcorr.json";
 
         /* Act
         Llamamos a Lector con objeto nuevo escena.
@@ -50,6 +50,7 @@ public class LectorEscenaJsonTest {
      * Test
      * Prueba unitaria que verifica que el lector de escenas rechaza
      * un archivo JSON con dimensiones incorrectas o negativas.
+     * Seguiremos el modelo Arrange–Act–Assert.
      */
     @Test
     void debeRechazarDimensionesNegativas() {
@@ -77,6 +78,7 @@ public class LectorEscenaJsonTest {
      * Prueba unitaria que verifica que el lector rechaza un archivo JSON
      * que existe y es sintácticamente válido, pero al cual le falta un campo
      * obligatorio.
+     * Seguiremos el modelo Arrange–Act–Assert.
      */
     @Test
     void debeRechazarJsonSinImagen() {
@@ -95,6 +97,7 @@ public class LectorEscenaJsonTest {
      * Test
      * Prueba unitaria que verifica el comportamiento del sistema cuando
      * se intenta leer una ruta de archivo que no existe.
+     * Seguiremos el modelo Arrange–Act–Assert.
      */
     @Test
     void debeRechazarArchivoInexistente() {
@@ -109,4 +112,57 @@ public class LectorEscenaJsonTest {
         );
     }
 
+    /**
+     * Prueba unitaria que verifica que el lector rechaza un archivo JSON
+     * con un valor FOV inválido o fuera de rango.
+     * Seguiremos el modelo Arrange–Act–Assert.
+     */
+    @Test
+    void debeRechazarFovInvalido() {
+        //Arrange
+        String ruta = "src/test/resources/escenas/prueba_dimensiones_IMPL-COMPLETA_incFov.json";
+
+        // Act y Assert
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> LectorEscenaJson.leer(ruta)
+        );
+    }
+
+
+    /**
+     * Prueba unitaria que verifica que el lector rechaza un archivo JSON
+     * que contiene una intensidad lumínica negativa.
+     * Seguiremos el modelo Arrange–Act–Assert.
+     */
+    @Test
+    void debeRechazarIntensidadNegativa() {
+        //Arrange
+        String ruta = "src/test/resources/escenas/prueba_dimensiones_IMPL-COMPLETA_incINT.json";
+
+        // Act y Assert
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> LectorEscenaJson.leer(ruta)
+        );
+    }
+
+
+    /**
+     * Prueba unitaria que verifica que el lector rechaza un archivo JSON
+     * que incluye un tipo de objeto desconocido.
+     * Seguiremos el modelo Arrange–Act–Assert.
+     */
+    @Test
+    void debeRechazarObjetoDesconocido() {
+        //Arrange
+        String ruta = "src/test/resources/escenas/prueba_dimensiones_IMPL-COMPLETA_incOBJ.json";
+
+        // Act y Assert
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> LectorEscenaJson.leer(ruta)
+        );
+    }
 }
+//IMPLEMENTAR COMO SABEMOS QUE EFECTIVAMENTE EN ESA PARTE VALIO MADRE
