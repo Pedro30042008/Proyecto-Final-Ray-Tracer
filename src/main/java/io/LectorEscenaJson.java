@@ -177,7 +177,7 @@ public class LectorEscenaJson {
                     //Leeremos su normal
                     double[] normal = leerTerna(objeto, "normal");
                     /*Checamos que la normal no sea el vector 0, pues de ser
-                    asi tendriamos un plano sin inclinacion y como depues debemos
+                    asi tendriamos un plano sin orientacion y como depues debemos
                     de sacar longitud caemos en division entre 0.
                      */
                     if (normal[0] == 0 && normal[1] == 0 && normal[2] == 0) {
@@ -365,7 +365,7 @@ public class LectorEscenaJson {
          */
         for (int i = 0; i < color.length; i++) {
             /*
-            Menor a 0 y mayor a 0 son los casos donde 
+            Menor a 0 y mayor a 1 son los casos donde 
             seria un color invalido.
             */
             if (color[i] < 0 || color[i] > 1) {
