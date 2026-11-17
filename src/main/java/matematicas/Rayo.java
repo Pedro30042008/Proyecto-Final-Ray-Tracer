@@ -2,18 +2,15 @@ package matematicas;
 
 /**
  * Clase Rayo.
- * <p>
+ *
  * Define la estructura de un rayo y la forma de calcular los puntos de
  * su trayectoria, de denota como:
- * </p>
- * <p>
+ *
  * R(t) = O + tD, donde;
- * </p>
- * <ul>
- *   <li>'t' es parámetro libre que denota un punto específico del rayo.</li>
- *   <li>'O' es el punto donde se origina el rayo.</li>
- *   <li>'D' es un vector, distinto del vector nulo, que denota la dirección del rayo.</li>
- * </ul>
+ *
+ * 't' es parámetro libre que denota un punto específico del rayo.
+ * 'O' es el punto donde se origina el rayo.
+ * 'D' es un vector, distinto del vector nulo, que denota la dirección del rayo.
  */
 public class Rayo {
 
@@ -92,10 +89,14 @@ public class Rayo {
      *
      * @param t parámetro escalar de la trayectoria.
      * @return punto resultante dado el parámetro t.
-     * @throws IllegalArgumentException si t es negativo.
+     * @throws IllegalArgumentException si t es negativo o no es un real finito.
      */
     public VectorR3 puntoEnT(double t) {
-	// Validamos el parámetro t.
+	// Verificamos que el parámetro t sea finito.
+	if (!Double.isFinite(t))
+	    // Lanzamos un error.
+	    throw new IllegalArgumentException("El parámetro t no es valido al no ser un real finito: " + t);
+	// Validamos el parámetro t para que no ea negativo.
 	if (t < 0)
 	    // Lanzamos la excepción correspondiente.
 	    throw new IllegalArgumentException("El parámetro t es inválido al ser negativo:" + t);
