@@ -2,17 +2,14 @@ package matematicas;
 
 /**
  * Clase VectorR3.
- * <p>
- * Define la estructura de un vector en el espacio &#8477;<sup>3</sup>.
- * </p>
- * <p>
+ *
+ * Define la estructura de un vector en el espacio R3
+ *
  * Este puede representar:
- * </p>
- * <ul>
- *   <li>Una posición en el espacio.</li>
- *   <li>Vectores con magnitud, dirección y sentido.</li>
- *   <li>Colores RGB.</li>
- * </ul>
+ *
+ * Una posición en el espacio.
+ * Vectores con magnitud, dirección y sentido.
+ * Colores RGB.
  */
 public class VectorR3 {
 
@@ -29,17 +26,12 @@ public class VectorR3 {
      * @param x componente X del vector.
      * @param y componente Y del vector.
      * @param z componente Z del vector.
-     * @throws ArithmeticException si un valor de alguna componente es inválido.
      */
     public VectorR3(double x, double y, double z) {
-	// Verificamos que las componentes sean válidas.
-	if (!Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z))
-	    // Lanzamos un error.
-	    throw new ArithmeticException("Uno o más valores otorgados para las componetes del vector son inválidos.");
-        // Asignamos las componentes, evitando ceros negativos.
-        this.x = (x == 0.0) ? 0.0 : x;
-        this.y = (y == 0.0) ? 0.0 : y;
-        this.z = (z == 0.0) ? 0.0 : z;
+	// Verificamos componente a componente y asignamos las componentes, evitando ceros negativos.
+	this.x = verificarNumero(x, "El valor otorgado para la componete x es inválido: " + x);
+	this.y = verificarNumero(y, "El valor otorgado para la componete y es inválido: " + y);
+	this.z = verificarNumero(z, "El valor otorgado para la componete z es inválido: " + x);
     }
 
     /**
@@ -88,45 +80,30 @@ public class VectorR3 {
      * Modifica la componente x del vector.
      *
      * @param x nueva componente X del vector.
-     * @throws ArithmeticException si el valor de la componente x es inválido.
      */
     public void setX(double x) {
-	// Verificamos que sea un número representable.
-	if (!Double.isFinite(x))
-	    // Lanzamos un error.
-	    throw new ArithmeticException("El valor otorgado para la componete x es inválido:" + x);
-        // Modificamos la componente X del vector.
-        this.x = (x == 0.0) ? 0.0 : x;
+	// Verificamos componente a componente y asignamos las componente, evitando cero negativo.
+	this.x = verificarNumero(x, "El valor otorgado para la componete x es inválido: " + x);
     }
 
     /**
      * Modifica la componente y del vector.
      *
      * @param y nueva componente Y del vector.
-     * @throws ArithmeticException si el valor de la componente y es inválido.
      */
     public void setY(double y) {
-        // Verificamos que sea un número representable.
-	if (!Double.isFinite(y))
-	    // Lanzamos un error.
-	    throw new ArithmeticException("El valor otorgado para la componete y es inválido:" + y);
-        // Modificamos la componente Y del vector.
-        this.y = (y == 0.0) ? 0.0 : y;
+	// Verificamos componente a componente y asignamos las componente, evitando cero negativo.
+	this.y = verificarNumero(y, "El valor otorgado para la componete y es inválido: " + y);
     }
 
     /**
      * Modifica la componente z del vector.
      *
      * @param z nueva componente Z del vector.
-     * @throws ArithmeticException si el valor de la componente z es inválido.
      */
     public void setZ(double z) {
-	// Verificamos que sea un número representable.
-	if (!Double.isFinite(z))
-	    // Lanzamos un error.
-	    throw new ArithmeticException("El valor otorgado para la componete z es inválido:" + z);
-        // Modificamos la componente Z del vector.
-        this.z = (z == 0.0) ? 0.0 : z;
+	// Verificamos componente a componente y asignamos las componente, evitando cero negativo.
+	this.z = verificarNumero(z, "El valor otorgado para la componete z es inválido: " + z);
     }
     
     /**
@@ -212,7 +189,6 @@ public class VectorR3 {
     
     /**
      * Calcula la norma del vector.
-     
      *
      * @return norma del vector.
      */
@@ -272,6 +248,24 @@ public class VectorR3 {
 	return valor;
     }
 
+    /**
+     * Metodo auxiliar para lanzar excepción con números inválidos
+     * y evitar el cero negativo.
+     *
+     * @param numero real a validar.
+     * @param mensaje texto que aparecera para indicar el error.
+     * @return el número validado y sin cero negativo.
+     * @throws IllegalArgumentException si el número dado no es finito real.
+     */
+    private double verificarNumero(double numero, String mensaje) {
+	// Verificamos que sea un número finito real.
+	if (!Double.isFinite(numero))
+	    // Lanzamos un error si no es finito real.
+	    throw new IllegalArgumentException(mensaje);
+	// Retornamos el número real evitando ceros negativos.
+	return (numero == 0.0) ? 0.0 : numero;
+    }
+    
     /**
      * Método equals para comparar dos vectores.
      *
