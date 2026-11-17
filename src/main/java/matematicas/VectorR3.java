@@ -29,8 +29,13 @@ public class VectorR3 {
      * @param x componente X del vector.
      * @param y componente Y del vector.
      * @param z componente Z del vector.
+     * @throws ArithmeticException si un valor de alguna componente es inválido.
      */
     public VectorR3(double x, double y, double z) {
+	// Verificamos que las componentes sean válidas.
+	if (!Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z))
+	    // Lanzamos un error.
+	    throw new ArithmeticException("Uno o más valores otorgados para las componetes del vector son inválidos.");
         // Asignamos las componentes, evitando ceros negativos.
         this.x = (x == 0.0) ? 0.0 : x;
         this.y = (y == 0.0) ? 0.0 : y;
@@ -83,6 +88,7 @@ public class VectorR3 {
      * Modifica la componente x del vector.
      *
      * @param x nueva componente X del vector.
+     * @throws ArithmeticException si el valor de la componente x es inválido.
      */
     public void setX(double x) {
 	// Verificamos que sea un número representable.
@@ -97,6 +103,7 @@ public class VectorR3 {
      * Modifica la componente y del vector.
      *
      * @param y nueva componente Y del vector.
+     * @throws ArithmeticException si el valor de la componente y es inválido.
      */
     public void setY(double y) {
         // Verificamos que sea un número representable.
@@ -111,6 +118,7 @@ public class VectorR3 {
      * Modifica la componente z del vector.
      *
      * @param z nueva componente Z del vector.
+     * @throws ArithmeticException si el valor de la componente z es inválido.
      */
     public void setZ(double z) {
 	// Verificamos que sea un número representable.
