@@ -85,8 +85,12 @@ public class VectorR3 {
      * @param x nueva componente X del vector.
      */
     public void setX(double x) {
+	// Verificamos que sea un número representable.
+	if (!Double.isFinite(x))
+	    // Lanzamos un error.
+	    throw new ArithmeticException("El valor otorgado para la componete x es inválido:" + x);
         // Modificamos la componente X del vector.
-        this.x = x;
+        this.x = (x == 0.0) ? 0.0 : x;
     }
 
     /**
@@ -95,8 +99,12 @@ public class VectorR3 {
      * @param y nueva componente Y del vector.
      */
     public void setY(double y) {
+        // Verificamos que sea un número representable.
+	if (!Double.isFinite(y))
+	    // Lanzamos un error.
+	    throw new ArithmeticException("El valor otorgado para la componete y es inválido:" + y);
         // Modificamos la componente Y del vector.
-        this.y = y;
+        this.y = (y == 0.0) ? 0.0 : y;
     }
 
     /**
@@ -105,8 +113,12 @@ public class VectorR3 {
      * @param z nueva componente Z del vector.
      */
     public void setZ(double z) {
+	// Verificamos que sea un número representable.
+	if (!Double.isFinite(z))
+	    // Lanzamos un error.
+	    throw new ArithmeticException("El valor otorgado para la componete z es inválido:" + z);
         // Modificamos la componente Z del vector.
-        this.z = z;
+        this.z = (z == 0.0) ? 0.0 : z;
     }
     
     /**
