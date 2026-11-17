@@ -29,9 +29,9 @@ public class VectorR3 {
      */
     public VectorR3(double x, double y, double z) {
 	// Verificamos componente a componente y asignamos las componentes, evitando ceros negativos.
-	this.x = verificarNumero(x, "El valor otorgado para la componete x es inválido: " + x);
-	this.y = verificarNumero(y, "El valor otorgado para la componete y es inválido: " + y);
-	this.z = verificarNumero(z, "El valor otorgado para la componete z es inválido: " + x);
+	this.x = Verificador.verificarNumero(x, "El valor otorgado para la componete x es inválido: " + x);
+	this.y = Verificador.verificarNumero(y, "El valor otorgado para la componete y es inválido: " + y);
+	this.z = Verificador.verificarNumero(z, "El valor otorgado para la componete z es inválido: " + x);
     }
 
     /**
@@ -83,7 +83,7 @@ public class VectorR3 {
      */
     public void setX(double x) {
 	// Verificamos componente a componente y asignamos las componente, evitando cero negativo.
-	this.x = verificarNumero(x, "El valor otorgado para la componete x es inválido: " + x);
+	this.x = Verificador.verificarNumero(x, "El valor otorgado para la componete x es inválido: " + x);
     }
 
     /**
@@ -93,7 +93,7 @@ public class VectorR3 {
      */
     public void setY(double y) {
 	// Verificamos componente a componente y asignamos las componente, evitando cero negativo.
-	this.y = verificarNumero(y, "El valor otorgado para la componete y es inválido: " + y);
+	this.y = Verificador.verificarNumero(y, "El valor otorgado para la componete y es inválido: " + y);
     }
 
     /**
@@ -103,7 +103,7 @@ public class VectorR3 {
      */
     public void setZ(double z) {
 	// Verificamos componente a componente y asignamos las componente, evitando cero negativo.
-	this.z = verificarNumero(z, "El valor otorgado para la componete z es inválido: " + z);
+	this.z = Verificador.verificarNumero(z, "El valor otorgado para la componete z es inválido: " + z);
     }
     
     /**
@@ -126,9 +126,9 @@ public class VectorR3 {
      */
     public VectorR3 suma(VectorR3 vector) {
         // Devolvemos el vector resultante de la suma.
-        return new VectorR3(verificarDesbordamiento(this.x + vector.x, "suma", toString(), vector.toString()),
-			    verificarDesbordamiento(this.y + vector.y, "suma", toString(), vector.toString()),
-			    verificarDesbordamiento(this.z + vector.z, "suma", toString(), vector.toString()));
+        return new VectorR3(Verificador.verificarOperacion(this.x + vector.x, "suma", toString(), vector.toString()),
+			    Verificador.verificarOperacion(this.y + vector.y, "suma", toString(), vector.toString()),
+			    Verificador.verificarOperacion(this.z + vector.z, "suma", toString(), vector.toString()));
     }
 
     /**
@@ -140,9 +140,9 @@ public class VectorR3 {
      */
     public VectorR3 resta(VectorR3 vector) {
         // Devolvemos el vector resultante de la resta.
-        return new VectorR3(verificarDesbordamiento(this.x - vector.x, "resta", toString(), vector.toString()),
-			    verificarDesbordamiento(this.y - vector.y, "resta", toString(), vector.toString()),
-			    verificarDesbordamiento(this.z - vector.z, "resta", toString(), vector.toString()));
+        return new VectorR3(Verificador.verificarOperacion(this.x - vector.x, "resta", toString(), vector.toString()),
+			    Verificador.verificarOperacion(this.y - vector.y, "resta", toString(), vector.toString()),
+			    Verificador.verificarOperacion(this.z - vector.z, "resta", toString(), vector.toString()));
     }
 
     /**
@@ -155,9 +155,9 @@ public class VectorR3 {
      */
     public VectorR3 productoPorUnEscalar(double escalar) {
         // Devolvemos el vector resultante del producto por un escalar.
-        return new VectorR3(verificarDesbordamiento(this.x * escalar, "producto por el escalar: " + escalar, toString(), null),
-			    verificarDesbordamiento(this.y * escalar, "producto por el escalar: " + escalar, toString(), null),
-			    verificarDesbordamiento(this.z * escalar, "producto por el escalar: " + escalar, toString(), null));
+        return new VectorR3(Verificador.verificarOperacion(this.x * escalar, "producto por el escalar: " + escalar, toString(), null),
+			    Verificador.verificarOperacion(this.y * escalar, "producto por el escalar: " + escalar, toString(), null),
+			    Verificador.verificarOperacion(this.z * escalar, "producto por el escalar: " + escalar, toString(), null));
     }
 
     /**
@@ -170,7 +170,7 @@ public class VectorR3 {
      */
     public double productoPunto(VectorR3 vector) {
         // Devolvemos el número resultante del producto punto.
-        return verificarDesbordamiento(this.x * vector.x + this.y * vector.y + this.z * vector.z, "producto punto", toString(), vector.toString());
+        return Verificador.verificarOperacion(this.x * vector.x + this.y * vector.y + this.z * vector.z, "producto punto", toString(), vector.toString());
     }
 
     /**
@@ -182,9 +182,9 @@ public class VectorR3 {
      */
     public VectorR3 productoCruz(VectorR3 vector) {
         // Devolvemos el vector resultante del producto cruz. 
-        return new VectorR3(verificarDesbordamiento(this.y * vector.z - this.z * vector.y, "producto cruz", toString(), vector.toString()),
-			    verificarDesbordamiento(this.z * vector.x - this.x * vector.z, "producto cruz", toString(), vector.toString()),
-			    verificarDesbordamiento(this.x * vector.y - this.y * vector.x, "producto cruz", toString(), vector.toString()));
+        return new VectorR3(Verificador.verificarOperacion(this.y * vector.z - this.z * vector.y, "producto cruz", toString(), vector.toString()),
+			    Verificador.verificarOperacion(this.z * vector.x - this.x * vector.z, "producto cruz", toString(), vector.toString()),
+			    Verificador.verificarOperacion(this.x * vector.y - this.y * vector.x, "producto cruz", toString(), vector.toString()));
     }
     
     /**
@@ -194,7 +194,7 @@ public class VectorR3 {
      */
     public double norma() {
 	// Calculamos la suma de cuadrados de la norma y verificamos el desbordamiento.
-	double valor = verificarDesbordamiento(this.x * this.x + this.y * this.y + this.z * this.z, "norma", toString(), null);
+	double valor = Verificador.verificarOperacion(this.x * this.x + this.y * this.y + this.z * this.z, "norma", toString(), null);
         // Retornamos la norma del vector.
         return Math.sqrt(valor);
     }
@@ -215,55 +215,6 @@ public class VectorR3 {
 
         // Devolvemos un nuevo vector de norma uno.
         return productoPorUnEscalar(1 / norma);
-    }
-
-    /**
-     * Método auxiliar para verificar desbordamientos.
-     *
-     * @param valor número a evaluar de una operación resultante.
-     * @param operacion nombre de la operación que se realiza.
-     * @param v1 vector uno involucrado en la operación.
-     * @param v2 posible vector dos involucrado en la operación.
-     * @return valor resultante finito.
-     * @throws ArithmeticException si el valor resultante no es finito.
-     */
-    private double verificarDesbordamiento(double valor, String operacion, String v1, String v2){
-	// Si no es representable el valor resultante de la operación.
-	if (!Double.isFinite(valor)){
-	    // Verificamos si es una operación del vector o con otro.
-	    if (v2 == null)
-		// Lanzamos un error.
-		throw new ArithmeticException("El valor resultante de la operación" +
-					      operacion +
-					      "con el vector v: " + v1 +
-					      ", resulto no finito.");
-	    // Lanzamos un error.
-	    throw new ArithmeticException("El valor resultante de la operación" +
-					  operacion +
-					  "con los vectores v1: " + v1 +
-					  " y el vector v2: " + v2 +
-					  ", resulto no finito.");
-	}
-	// En caso contrario, retornamos el valor.
-	return valor;
-    }
-
-    /**
-     * Metodo auxiliar para lanzar excepción con números inválidos
-     * y evitar el cero negativo.
-     *
-     * @param numero real a validar.
-     * @param mensaje texto que aparecera para indicar el error.
-     * @return el número validado y sin cero negativo.
-     * @throws IllegalArgumentException si el número dado no es finito real.
-     */
-    private double verificarNumero(double numero, String mensaje) {
-	// Verificamos que sea un número finito real.
-	if (!Double.isFinite(numero))
-	    // Lanzamos un error si no es finito real.
-	    throw new IllegalArgumentException(mensaje);
-	// Retornamos el número real evitando ceros negativos.
-	return (numero == 0.0) ? 0.0 : numero;
     }
     
     /**

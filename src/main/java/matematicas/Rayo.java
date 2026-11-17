@@ -89,18 +89,17 @@ public class Rayo {
      *
      * @param t parámetro escalar de la trayectoria.
      * @return punto resultante dado el parámetro t.
-     * @throws IllegalArgumentException si t es negativo o no es un real finito.
      */
     public VectorR3 puntoEnT(double t) {
-	// Verificamos que el parámetro t sea finito.
-	if (!Double.isFinite(t))
-	    // Lanzamos un error.
-	    throw new IllegalArgumentException("El parámetro t no es valido al no ser un real finito: " + t);
-	// Validamos el parámetro t para que no ea negativo.
-	if (t < 0)
+	// Validamos la t.
+	double tValidada = Verificador.verificarNumero(t, "El parámetro t no es valido al no ser un real finito: " + t);
+	
+	// Validamos el parámetro t para que no sea negativo.
+	if (tValidada < 0)
 	    // Lanzamos la excepción correspondiente.
-	    throw new IllegalArgumentException("El parámetro t es inválido al ser negativo:" + t);
+	    throw new IllegalArgumentException("El parámetro t es inválido al ser negativo:" + tValidada);
+	
         // Calculamos el desplazamiento y lo sumamos al origen.
-        return origen.suma(direccion.productoPorUnEscalar(t));
+        return origen.suma(direccion.productoPorUnEscalar(tValidada));
     }
 }

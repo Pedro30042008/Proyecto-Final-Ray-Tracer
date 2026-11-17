@@ -17,9 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 public class TestVectorR3 {
 
-    /* Tolerancia para comparar resultados aproximados. */
-    private static final double TOLERANCIA = 1e-9;
-
     /* Vectores canónicos utilizados en las pruebas. */
     private VectorR3 e1;
     private VectorR3 e2;
@@ -334,12 +331,12 @@ public class TestVectorR3 {
         VectorR3 resultado = vector.vectorUnitario();
 
         // Verificamos las componentes del vector unitario con tolerancia.
-        assertEquals(0, resultado.getX(), TOLERANCIA);
-        assertEquals(0.6, resultado.getY(), TOLERANCIA);
-        assertEquals(0.8, resultado.getZ(), TOLERANCIA);
+        assertEquals(0, resultado.getX(), Verificador.TOLERANCIA);
+        assertEquals(0.6, resultado.getY(), Verificador.TOLERANCIA);
+        assertEquals(0.8, resultado.getZ(), Verificador.TOLERANCIA);
 
         // Verificamos que la norma del resultado sea uno.
-        assertEquals(1, resultado.norma(), TOLERANCIA);
+        assertEquals(1, resultado.norma(), Verificador.TOLERANCIA);
 
         // Verificamos que lance la excepción esperada con el vector cero.
         assertThrows(
