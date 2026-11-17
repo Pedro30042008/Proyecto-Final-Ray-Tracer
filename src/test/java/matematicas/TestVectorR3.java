@@ -1,10 +1,14 @@
 package matematicas;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Pruebas unitarias para la clase {@link VectorR3}.
@@ -53,43 +57,43 @@ public class TestVectorR3 {
         VectorR3 vector = new VectorR3(2, -3, 6);
 
         // Verificamos sus componentes.
-        Assertions.assertEquals(2, vector.getX());
-        Assertions.assertEquals(-3, vector.getY());
-        Assertions.assertEquals(6, vector.getZ());
+        assertEquals(2, vector.getX());
+        assertEquals(-3, vector.getY());
+        assertEquals(6, vector.getZ());
 
 	// Construimos un vector con componentes negativas y positivas de cero.
         vector = new VectorR3(-0.0, 0.0, -0.0);
 
         // Verificamos que las componentes sean cero positivo.
-        Assertions.assertEquals(0.0, vector.getX());
-        Assertions.assertEquals(0.0, vector.getY());
-        Assertions.assertEquals(0.0, vector.getZ());
+        assertEquals(0.0, vector.getX());
+        assertEquals(0.0, vector.getY());
+        assertEquals(0.0, vector.getZ());
 
 	// Verificamos la invalidación de la componentes no definidas.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> new VectorR3(Double.MAX_VALUE + Double.MAX_VALUE, 0, 0)
-				);
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> new VectorR3(0, Double.MAX_VALUE + Double.MAX_VALUE, 0)
-				);
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> new VectorR3(0, 0, Double.MAX_VALUE + Double.MAX_VALUE)
-				);
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> new VectorR3(Double.NaN, 0, 0)
-				);
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> new VectorR3(0, Double.NaN, 0)
-				);
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> new VectorR3(0, 0, Double.NaN)
-				);
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> new VectorR3(Double.POSITIVE_INFINITY, 0, 0)
+		     );
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> new VectorR3(0, Double.POSITIVE_INFINITY, 0)
+		     );
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> new VectorR3(0, 0, Double.POSITIVE_INFINITY)
+		     );
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> new VectorR3(Double.NaN, 0, 0)
+		     );
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> new VectorR3(0, Double.NaN, 0)
+		     );
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> new VectorR3(0, 0, Double.NaN)
+		     );
     }
     
     /**
@@ -98,9 +102,9 @@ public class TestVectorR3 {
     @Test
     public void testGetters() {
         // Verificamos sus componentes.
-        Assertions.assertEquals(1, e1.getX());
-        Assertions.assertEquals(0, e1.getY());
-        Assertions.assertEquals(0, e1.getZ());
+        assertEquals(1, e1.getX());
+        assertEquals(0, e1.getY());
+        assertEquals(0, e1.getZ());
     }
 
     /**
@@ -113,30 +117,42 @@ public class TestVectorR3 {
 	e1.setY(-1);
         e1.setZ(-1);
         // Verificamos sus componentes.
-        Assertions.assertEquals(-1, e1.getX());
-        Assertions.assertEquals(-1, e1.getY());
-        Assertions.assertEquals(-1, e1.getZ());
+        assertEquals(-1, e1.getX());
+        assertEquals(-1, e1.getY());
+        assertEquals(-1, e1.getZ());
 	// Modificamos al vector e1.
 	e1.setX(-0.0);
 	e1.setY(-0.0);
         e1.setZ(-0.0);
 	// Verificamos que las componentes sean cero positivo.
-        Assertions.assertEquals(0.0, e1.getX());
-        Assertions.assertEquals(0.0, e1.getY());
-        Assertions.assertEquals(0.0, e1.getZ());
+        assertEquals(0.0, e1.getX());
+        assertEquals(0.0, e1.getY());
+        assertEquals(0.0, e1.getZ());
 	// Verificamos la invalidación de la componentes no definidas.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> e1.setX(Double.MAX_VALUE + Double.MAX_VALUE)
-				);
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> e1.setY(Double.MAX_VALUE + Double.MAX_VALUE)
-				);
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> e1.setZ(Double.MAX_VALUE + Double.MAX_VALUE)
-				);
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> e1.setX(Double.POSITIVE_INFINITY)
+		     );
+	assertThrows(
+		     IllegalArgumentException.class,
+		     () -> e1.setY(Double.POSITIVE_INFINITY)
+		     );
+	assertThrows(
+		     IllegalArgumentException.class,
+		     () -> e1.setZ(Double.POSITIVE_INFINITY)
+		     );
+	assertThrows(
+		     IllegalArgumentException.class,
+		     () -> e1.setX(Double.NaN)
+		     );
+	assertThrows(
+		     IllegalArgumentException.class,
+		     () -> e1.setY(Double.NaN)
+		     );
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> e1.setZ(Double.NaN)
+		     );
     }
     
     /**
@@ -154,7 +170,7 @@ public class TestVectorR3 {
 	VectorR3 esperado = new VectorR3(8, 7, -3);
 	
         // Verificamos el vector resultante.
-        Assertions.assertEquals(esperado, resultado);
+        assertEquals(esperado, resultado);
     }
 
     /**
@@ -172,7 +188,7 @@ public class TestVectorR3 {
 	VectorR3 esperado = new VectorR3(8, 5, -3);
 	
         // Verificamos el vector resultante.
-        Assertions.assertEquals(esperado, resultado);
+        assertEquals(esperado, resultado);
     }
 
     /**
@@ -202,7 +218,7 @@ public class TestVectorR3 {
 	VectorR3 esperado = new VectorR3(x, y, z);
 
         // Verificamos el vector resultante.
-        Assertions.assertEquals(esperado, resultado);
+        assertEquals(esperado, resultado);
     }
 
     
@@ -237,7 +253,7 @@ public class TestVectorR3 {
         double resultado = a.productoPunto(b);
 
         // Verificamos el resultado esperado.
-        Assertions.assertEquals(esperado, resultado);
+        assertEquals(esperado, resultado);
     }
     
     /**
@@ -277,7 +293,7 @@ public class TestVectorR3 {
 	VectorR3 esperado = new VectorR3(xEsperada, yEsperada, zEsperada);
 	
         // Comparamos las tres componentes.
-        Assertions.assertEquals(esperado, resultado);
+        assertEquals(esperado, resultado);
     }
 
     /**
@@ -303,7 +319,7 @@ public class TestVectorR3 {
         double resultado = vector.norma();
 
         // Verificamos la norma esperada.
-        Assertions.assertEquals(esperado, resultado);
+        assertEquals(esperado, resultado);
     }
 
     /**
@@ -318,18 +334,18 @@ public class TestVectorR3 {
         VectorR3 resultado = vector.vectorUnitario();
 
         // Verificamos las componentes del vector unitario con tolerancia.
-        Assertions.assertEquals(0, resultado.getX(), TOLERANCIA);
-        Assertions.assertEquals(0.6, resultado.getY(), TOLERANCIA);
-        Assertions.assertEquals(0.8, resultado.getZ(), TOLERANCIA);
+        assertEquals(0, resultado.getX(), TOLERANCIA);
+        assertEquals(0.6, resultado.getY(), TOLERANCIA);
+        assertEquals(0.8, resultado.getZ(), TOLERANCIA);
 
         // Verificamos que la norma del resultado sea uno.
-        Assertions.assertEquals(1, resultado.norma(), TOLERANCIA);
+        assertEquals(1, resultado.norma(), TOLERANCIA);
 
         // Verificamos que lance la excepción esperada con el vector cero.
-        Assertions.assertThrows(
-				IllegalArgumentException.class,
-				() -> cero.vectorUnitario()
-				);
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> cero.vectorUnitario()
+		     );
     }
 
     /**
@@ -338,8 +354,8 @@ public class TestVectorR3 {
     @Test
     public void testEsCero() {
         // Verificamos que solo el primer vector sea cero.
-        Assertions.assertTrue(cero.esCero());
-        Assertions.assertFalse(e1.esCero());
+        assertTrue(cero.esCero());
+        assertFalse(e1.esCero());
     }
 
     /**
@@ -349,43 +365,43 @@ public class TestVectorR3 {
     @Test
     public void testDesbordamientos() {
 	// Verificamos el desbordamiento en la suma.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> limitePositivo.suma(limitePositivo)
-				);
+        assertThrows(
+		     ArithmeticException.class,
+		     () -> limitePositivo.suma(limitePositivo)
+		     );
 	
 	// Verificamos el desbordamiento en la resta.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> limiteNegativo.resta(limitePositivo)
-				);
+        assertThrows(
+		     ArithmeticException.class,
+		     () -> limiteNegativo.resta(limitePositivo)
+		     );
 	
 	// Verificamos el desbordamiento en el producto por escalar.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> limitePositivo.productoPorUnEscalar(2)
-				);
+        assertThrows(
+		     ArithmeticException.class,
+		     () -> limitePositivo.productoPorUnEscalar(2)
+		     );
 	
 	// Verificamos el desbordamiento en el producto punto.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> limitePositivo.productoPunto(limitePositivo)
-				);
+        assertThrows(
+		     ArithmeticException.class,
+		     () -> limitePositivo.productoPunto(limitePositivo)
+		     );
 
 	// Vector que provoca desbordamiento del nuevo vector con el producto cruz.
 	VectorR3 vectorGrande = new VectorR3(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	
 	// Verificamos el desbordamiento en el producto cruz.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> limitePositivo.productoCruz(vectorGrande)
-				);
+        assertThrows(
+		     ArithmeticException.class,
+		     () -> limitePositivo.productoCruz(vectorGrande)
+		     );
 	
 	// Verificamos el desbordamiento en el cálculo de la norma.
-	Assertions.assertThrows(
-				ArithmeticException.class,
-				() -> vectorGrande.norma()
-				);
+	assertThrows(
+		     ArithmeticException.class,
+		     () -> vectorGrande.norma()
+		     );
     }
 
     /**
@@ -394,21 +410,21 @@ public class TestVectorR3 {
     @Test
     public void testEquals() {
 	// Verificamos que el vector no sea igual a  null.
-	Assertions.assertFalse(e1.equals(null));
+        assertFalse(e1.equals(null));
 	
 	// Verificamos la igualdad del mismo vector.
-        Assertions.assertTrue(e1.equals(e1));
+        assertTrue(e1.equals(e1));
 	
 	// Verificamos la igualdad con otro vector.
         VectorR3 otro = new VectorR3(1, 0, 0);
-        Assertions.assertTrue(e1.equals(otro));
-        Assertions.assertTrue(otro.equals(e1));
+        assertTrue(e1.equals(otro));
+        assertTrue(otro.equals(e1));
 	
 	// Verificamos la desigualdad con otro vector.
-        Assertions.assertFalse(e1.equals(e2));
+        assertFalse(e1.equals(e2));
 	
 	// Verificamos la desigualdad con otras clases.
-        Assertions.assertFalse(e1.equals("vector"));
+        assertFalse(e1.equals("vector"));
     }
     
     /**
@@ -417,6 +433,6 @@ public class TestVectorR3 {
     @Test
     public void testToString() {
         // Verificamos sus componentes.
-        Assertions.assertEquals("(1.0, 0.0, 0.0)", e1.toString());
+        assertEquals("(1.0, 0.0, 0.0)", e1.toString());
     }
 }
