@@ -17,3 +17,8 @@ target/
 
 # Classpath local generado para ejecutar Main
 classpath.txt
+\#*\#
+.#*
+auto-save-list/
+
+.DS_Store
