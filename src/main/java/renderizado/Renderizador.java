@@ -1,7 +1,11 @@
+package renderizado;
+
+import matematicas.Rayo;
+import escena.Escena;
 
 public class Renderizador {
 
-    public ColorRGB calcularColor(
+    /*public ColorRGB calcularColor(
             Rayo rayo, Escena escena) {
 
         // Buscar la intersección más cercana.
@@ -17,4 +21,5 @@ public class Renderizador {
         throw new UnsupportedOperationException(
                 "Pendiente de implementar");
     }
+    */
 }
