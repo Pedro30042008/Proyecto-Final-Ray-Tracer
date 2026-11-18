@@ -1,6 +1,17 @@
 
 public class Camara {
+
+    /**
+     * Atributo	Tipo	Función
+     * posicion	VectorR3	Indica dónde está la cámara.
+     * miraA	VectorR3	Indica el punto al que observa.
+     * fov	double	Determina qué tan amplio es su campo de visión.
+     * ancho	int	Cantidad de columnas de píxeles.
+     * alto	int	Cantidad de filas de píxeles.
+    * */
     private final VectorR3 posicion;
+    //miraA no es todavía un vector de dirección. Es un punto.
+    //Para descubrir hacia dónde mira la cámara, necesitamos calcular la dirección que une ambos puntos.
     private final VectorR3 miraA;
     private final double fov;
     private final int ancho;
