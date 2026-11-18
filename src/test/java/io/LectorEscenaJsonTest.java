@@ -34,14 +34,11 @@ public class LectorEscenaJsonTest {
             "src/test/resources/escenas/prueba_sintaxis_inc.json";
 
         // Act y assert
-        IllegalArgumentException excepcion = assertThrows(
-            IllegalArgumentException.class,
+        IllegalArgumentException excepcion = assertThrows(IllegalArgumentException.class,
             () -> LectorEscenaJson.leer(ruta));
 
         //Comprobamos que truene donde debe
-        assertTrue(
-            excepcion.getMessage().contains("JSON válido")
-        );
+        assertTrue(excepcion.getMessage().contains("JSON válido"));
     }
 
 
@@ -92,17 +89,18 @@ public class LectorEscenaJsonTest {
         */ 
 
 
-        IllegalArgumentException excepcion = assertThrows(
-            /*
-            IllegalArgumentException.class -> Excepcion que esperamos que ocurra
-            ()) -> LectorEscenaJson.leer(ruta) -> Lambda que ejecuta el metodo
-                  leer con la ruta especificada.
-             */
-            IllegalArgumentException.class, () -> LectorEscenaJson.leer(ruta));
+       /*
+       IllegalArgumentException.class -> Excepcion que esperamos que ocurra
+       ()) -> LectorEscenaJson.leer(ruta) -> Lambda que ejecuta el metodo
+             leer con la ruta especificada.
+        */
+        IllegalArgumentException excepcion = assertThrows(IllegalArgumentException.class,
+             () -> LectorEscenaJson.leer(ruta));
 
         //Verificamos que efectivamente truene donde queremos
         assertTrue(excepcion.getMessage().contains("ancho"));
     }
+
     /**
      * Test
      * Prueba unitaria que verifica que el lector rechaza un archivo JSON
@@ -117,8 +115,7 @@ public class LectorEscenaJsonTest {
         String ruta = "src/test/resources/escenas/prueba_sin_imagen_inc.json";
 
         // Act y Assert
-        IllegalArgumentException excepcion = assertThrows(
-            IllegalArgumentException.class,
+        IllegalArgumentException excepcion = assertThrows(IllegalArgumentException.class,
             () -> LectorEscenaJson.leer(ruta));
 
             //Verificamos que efectivamente truene donde queremos
@@ -138,8 +135,7 @@ public class LectorEscenaJsonTest {
         String ruta = "src/test/resources/escenas/no_existe.json";
 
         // Act y Assert
-        assertThrows(
-            IOException.class,
+        assertThrows(IOException.class,
             () -> LectorEscenaJson.leer(ruta)
         );
     }
@@ -196,7 +192,8 @@ public class LectorEscenaJsonTest {
 
         // Act y Assert
         IllegalArgumentException excepcion = assertThrows(
-            IllegalArgumentException.class, () -> LectorEscenaJson.leer(ruta));
+            IllegalArgumentException.class,
+             () -> LectorEscenaJson.leer(ruta));
         //Verificamos que efectivamente truene donde queremos    
         assertTrue(excepcion.getMessage().contains("Tipo de objeto desconocido"));           
     }

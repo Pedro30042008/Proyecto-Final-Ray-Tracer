@@ -20,9 +20,7 @@ public class Escena {
      */
     public Escena(int ancho, int alto) {
         if (ancho <= 0 || alto <= 0) {// Para no crear escenas con dimensiones negativas o ceros.
-            throw new IllegalArgumentException(
-                "Las dimensiones de la imagen deben ser positivas."
-            );
+            throw new IllegalArgumentException("Las dimensiones de la imagen deben ser positivas.");
         }
 
         this.ancho = ancho;

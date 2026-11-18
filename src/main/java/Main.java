@@ -5,8 +5,7 @@ import escena.Escena;
 import io.LectorEscenaJson;
 
 /**
- * Punto de entrada del Ray Tracer.
- *
+ * MAIN
  * Recibe los argumentos de ejecución, valida su formato
  * y coordina la lectura de la escena.
  * !!NO TERMINADO!! CONSIDERANDO ORDEN DE EJEMPLO, java -jar raytracer.jar escena.json salida.ppm --trabajadores N
