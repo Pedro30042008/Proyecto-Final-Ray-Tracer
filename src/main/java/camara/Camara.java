@@ -1,3 +1,7 @@
+package camara;
+
+import matematicas.VectorR3;
+import matematicas.Rayo;
 
 public class Camara {
 
