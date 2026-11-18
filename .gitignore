@@ -13,4 +13,8 @@ target/
 *.log
 *.swp
 *~
+\#*\#
+.#*
+auto-save-list/
+
 .DS_Store
