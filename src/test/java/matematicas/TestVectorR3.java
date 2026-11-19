@@ -340,7 +340,7 @@ public class TestVectorR3 {
 
         // Verificamos que lance la excepción esperada con el vector cero.
         assertThrows(
-		     IllegalArgumentException.class,
+		     ArithmeticException.class,
 		     () -> cero.vectorUnitario()
 		     );
     }
