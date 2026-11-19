@@ -57,6 +57,25 @@ public class Plano extends Objeto3D {
     public VectorR3 getNormal() {
 	return this.normal;
     }
+
+    /**
+     * Modifica el punto perteneciente al plano.
+     *
+     * @param punto nuevo punto perteneciente al plano.
+     */
+    public void setPunto(VectorR3 punto) {
+	this.punto = punto;
+    }
+
+    /**
+     * Modifica el vector normal al plano, siendo el mismo
+     * para todos los puntos pertenecientes al plano.
+     *
+     * @param normal nuevo vector normal al plano.
+     */
+    public void setNormal(VectorR3 normal) {
+        this.normal = normal;
+    }
     
     /**
      * Calcula la intersección que tiene el plano con un rayo.
