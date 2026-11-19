@@ -4,16 +4,17 @@ import matematicas.VectorR3;
 
 /**
  * Guarda los datos necesarios de los cálculos obtenidos de la intersección
- * de un rayo con una figura.
+ * de un rayo con una figura. Si no existe o está bien definida, la
+ * intersección es <code>null</code>.
  */
 public class Interseccion {
 
     /* Parámetro t donde se produce la intersección. */
-    private final double t;
+    private double t;
     /* Punto donde se presenta la intersección. */
-    private final VectorR3 punto;
+    private VectorR3 punto;
     /* Vector perpendicular a la superficie en el punto de choque. */
-    private final VectorR3 normal;
+    private VectorR3 normal;
 
     /**
      * Construye los datos que debe guardar la intersección.
@@ -50,7 +51,6 @@ public class Interseccion {
      * @return parámetro t cuando ocurre la intersección.
      */
     public double getT() {
-	// Devolvemos el parámetro t.
         return this.t;
     }
 
@@ -60,7 +60,6 @@ public class Interseccion {
      * @return vector que contiene el punto donde se produce la intersección.
      */
     public VectorR3 getPunto() {
-	// Devolvemos el punto.
         return this.punto;
     }
 
@@ -70,7 +69,35 @@ public class Interseccion {
      * @return vector normal de la intersección rayo-figura.
      */
     public VectorR3 getNormal() {
-	// Devolvemos el vector normal.
         return this.normal;
+    }
+
+    /**
+     * Moifica el parámetro donde se produce la intersección rayo figura.
+     *
+     * @param t nuevo parámetro t cuando ocurre la intersección.
+     */
+    public void setT(double t) {
+        this.t = t;
+    }
+
+    /**
+     * Modifica el punto de la intersección.
+     *
+     * @param punto nuevo vector que contiene el punto donde se
+     *        produce la intersección.
+     */
+    public void getPunto(VectorR3 punto) {
+        this.punto = punto;
+    }
+
+    /**
+     * Modifica el vector normal de la intersección rayo-figura.
+     *
+     * @param normal nuevo vector normal a la supeerficie de la
+     *        intersección rayo-figura.
+     */
+    public void getNormal(VectorR3 normal) {
+        this.normal = normal;
     }
 }

@@ -10,7 +10,7 @@ import matematicas.VectorR3;
 public abstract class Objeto3D {
 
     /* Color del objeto, con componentes RGB entre 0 y 1. */
-    private final VectorR3 color;
+    private VectorR3 color;
 
     /**
      * Construye un objeto geométrico con un color uniforme.
@@ -40,6 +40,15 @@ public abstract class Objeto3D {
      */
     public VectorR3 getColor() {
         return this.color;
+    }
+
+    /**
+     * Modifica el color uniforme del objeto.
+     *
+     * @param color nuevo color del objeto.
+     */
+    public void setColor(VectorR3 color) {
+        this.color = color;
     }
 
     /**
