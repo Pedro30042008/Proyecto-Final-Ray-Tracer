@@ -24,8 +24,8 @@ public class Rayo {
      *
      * @param origen vector que representa el punto de origen.
      * @param direccion vector que determina la dirección del rayo.
-     * @throws IllegalArgumentException si alguno de los argumentos es null
-     *         o si la dirección es el vector cero.
+     * @throws IllegalArgumentException si alguno de los argumentos es
+     *         <code>null</code> o si la dirección es el vector cero.
      */
     public Rayo(VectorR3 origen, VectorR3 direccion) {
         // Verificamos que los argumentos no sean nulos.
@@ -47,7 +47,6 @@ public class Rayo {
      * @return vector que representa el punto de origen del rayo.
      */
     public VectorR3 getOrigen() {
-        // Devolvemos el vector de origen.
         return this.origen;
     }
 
@@ -57,7 +56,6 @@ public class Rayo {
      * @return vector que determina la dirección del rayo.
      */
     public VectorR3 getDireccion() {
-        // Devolvemos el vector de dirección.
         return this.direccion;
     }
 
@@ -67,7 +65,6 @@ public class Rayo {
      * @param origen nuevo vector que representa el punto de origen del rayo.
      */
     public void setOrigen(VectorR3 origen) {
-        // Modificamos el vector de origen.
         this.origen = origen;
     }
 
@@ -77,7 +74,6 @@ public class Rayo {
      * @param direccion nuevo vector que determina la dirección del rayo.
      */
     public void setDireccion(VectorR3 direccion) {
-        // Modificamos el vector de dirección.
         this.direccion = direccion;
     }
     
@@ -92,7 +88,7 @@ public class Rayo {
      */
     public VectorR3 puntoEnT(double t) {
 	// Validamos la t.
-	double tValidada = Verificador.verificarNumero(t, "El parámetro t no es valido al no ser un real finito: " + t);
+	double tValidada = Verificador.verificarNumero(t, "El parámetro t no es válido al no ser un real finito: " + t);
 	
 	// Validamos el parámetro t para que no sea negativo.
 	if (tValidada < 0)

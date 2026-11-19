@@ -203,7 +203,7 @@ public class VectorR3 {
      * Devuelve el vector normalizado.
      *
      * @return el vector unitario del vector.
-     * @throws IllegalArgumentException si es el vector cero.
+     * @throws ArithmeticException si es el vector cero.
      */
     public VectorR3 vectorUnitario() {
         // Calculamos la norma del vector.
@@ -211,7 +211,7 @@ public class VectorR3 {
 
         // Verificamos que la normalización esté definida.
         if (norma == 0)
-            throw new IllegalArgumentException("El vector cero" + toString() + " no tiene vector unitario.");
+            throw new ArithmeticException("El vector cero" + toString() + " no tiene vector unitario.");
 
         // Devolvemos un nuevo vector de norma uno.
         return productoPorUnEscalar(1 / norma);
