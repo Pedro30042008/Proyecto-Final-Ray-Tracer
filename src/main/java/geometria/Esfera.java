@@ -20,8 +20,8 @@ public class Esfera extends Objeto3D {
      * @param centro vector que apunta al centro de la esfera.
      * @param radio valor del radio de la esfera.
      * @param color componentes RGB de la esfera.
-     * @throws IllegalArgumentException si el centro es null o si
-     *         el radio no es un número real finito y mayor a 0.
+     * @throws IllegalArgumentException si el centro es <code>null</code>
+     *         o si el radio no es un número real finito y mayor a 0.
      */
     public Esfera(VectorR3 centro, double radio, VectorR3 color) {
 	// Invocamos el constructor padre dado un color.
@@ -49,7 +49,6 @@ public class Esfera extends Objeto3D {
      * @return radio de la esfera.
      */
     public double getRadio() {
-	// Retornamos el radio de la figura.
 	return this.radio;
     }
 
@@ -59,8 +58,25 @@ public class Esfera extends Objeto3D {
      * @return vector que contiene el centro de la esfera.
      */
     public VectorR3 getCentro() {
-	// Retornamos el centro de la figura.
 	return this.centro;
+    }
+
+    /**
+     * Modifica el radio de la esfera.
+     *
+     * @param radio nuevo radio de la esfera.
+     */
+    public void setRadio(double radio) {
+        this.radio = radio;
+    }
+
+    /**
+     * Modifica el centro de la esfera.
+     *
+     * @param centro nuevo punto donde se localiza el centro de la esfera.
+     */
+    public void setCentro(VectorR3 centro) {
+        this.centro = centro;
     }
     
     /**
@@ -68,8 +84,8 @@ public class Esfera extends Objeto3D {
      *
      * @param rayo con el cual determinaremos su intersección con la esfera.
      * @return la intersección resultante de la esfera con el rayo,
-     *         null si no existe.
-     * @throws IllegalArgumentException si el rayo es null.
+     *         <code>null</code> si no existe.
+     * @throws IllegalArgumentException si el rayo es <code>null</code>.
      */
     @Override
     public Interseccion intersectar(Rayo rayo) {
@@ -88,10 +104,10 @@ public class Esfera extends Objeto3D {
 	double a = direccion.productoPunto(direccion);
 	
 	// Hallamos b.
-	double b = Verificador.verificarNumero(auxDif.productoPunto(direccion) * 2, "Operación para calcular a con desbordamiento.");
+	double b = Verificador.verificarNumero(auxDif.productoPunto(direccion) * 2, "Operación para calcular b con desbordamiento.");
 	
 	// Hallamos c.
-	double c = Verificador.verificarNumero(auxDif.productoPunto(auxDif) - this.radio * this.radio, "Operación para calcular b con desbordamiento.");
+	double c = Verificador.verificarNumero(auxDif.productoPunto(auxDif) - this.radio * this.radio, "Operación para calcular c con desbordamiento.");
 	
 	// Calculamos el discriminante.
 	double discriminante = Verificador.verificarNumero(b * b - 4 * a * c, "Operación para calcular discriminante con desbordamiento.");
