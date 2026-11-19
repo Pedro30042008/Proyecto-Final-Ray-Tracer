@@ -1,7 +1,12 @@
-
 package io;
 
+//Clases con las que trabajamos
 import escena.Escena;
+import matematicas.VectorR3;
+import geometria.Objeto3D;
+import geometria.Esfera;
+import geometria.Plano;
+import camara.Camara;
 
 //Biblioteca para leer JSON
 import com.google.gson.JsonElement;
@@ -9,10 +14,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonArray;
-
 //Biblioteca para leer y excepcion
 import java.io.FileReader;
 import java.io.IOException;
+/*Biblioteca para listas */
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Lee archivos JSON y construye objetos de tipo Escena.
@@ -21,10 +28,11 @@ public class LectorEscenaJson {
 
     //---LECTURA JSON---//
     /**
-     * Lee las dimensiones de una escena desde un archivo JSON.
+     * Metodo pricipal para la lectura de un JSON.
+     * Lee y busca cada parametro para crear una escena.
      *
      * @param ruta Ruta del archivo JSON.
-     * @return Escena con las dimensiones recuperadas.
+     * @return Escena con los atributos extraidos.
      * @throws IOException si no puede leerse el archivo.
      * @throws IllegalArgumentException si los datos son inválidos.
      */
@@ -32,24 +40,18 @@ public class LectorEscenaJson {
         //Ocuparemos un try-with-resources, para evitar cosumir recursos del sisitema
         try (FileReader archivo = new FileReader(ruta)) {
             
-            //Leemos el archivo y lo analiza caractrer a caracter asia extraemos las propiedades de la Escena.
+            /*Leemos el archivo y lo analiza caractrer a caracter a si extraemos las propiedades de la Escena.*/
             JsonElement raiz = JsonParser.parseReader(archivo);
 
             
-            /*
-            Preguntamos si el JSON (archvo) empieza con  {...}
-            Y como solo lo parseamos, asi podemos asegurarnos que es un objeto y no caer en el caso de null.
-             */
+            /*Preguntamos si el JSON (archivo) empieza con  {...}
+                Y como solo lo parseamos, asi podemos asegurarnos que es un objeto y no caer en el caso de null.*/
             if (!raiz.isJsonObject()) {
-                throw new IllegalArgumentException(
-                    "La raíz del JSON debe ser un objeto."
-                );
-            }
+                throw new IllegalArgumentException("La raíz del JSON debe ser un objeto.");
+                }
             
-            /*
-            Como ya nos aseguramos que es un objeto.
-            Lo convertimos a un objeto json, para asi poder obtener datos por nombre
-             */
+            /*Como ya nos aseguramos que es un objeto.
+                Lo convertimos a un objeto json, para asi poder obtener datos por nombre*/
             JsonObject json = raiz.getAsJsonObject();
 
             /*
@@ -64,135 +66,196 @@ public class LectorEscenaJson {
             }
             /*
             Ya sabemos que si tenemos imagen y es un objeto, podemos convertirlo
-            a un objeto y acceder a su prop.
+            a un objeto y acceder a sus props.
              */
             JsonObject imagen = json.getAsJsonObject("imagen");
 
-            //Obtenemos ancho y alto
+            /*Llamamos a leerEnterosPositivo para recuperar ancho y alto */
             int ancho = leerEnteroPositivo(imagen, "ancho");
             int alto = leerEnteroPositivo(imagen, "alto");
 
-            //!!TEMPORAL PARA PROBAR CAMARA COLOR LUZ Y OBJETOS!!)//
-            // Validar los demás componentes de la escena.
-            leerCamara(json);
-            leerColor(json, "fondo");
-
+            /* Llamamos a leerCamara para recuperar una camara.
+                Pasandole ancho y alto apra que nos devuelva un obj camara.*/
+            Camara camara = leerCamara(json, ancho, alto);       
+            /*Llamamos a leercolor que nos regresara un vector con el color 
+                entre 0 y 1 correspondiente al color del fondo. */
+            VectorR3 fondo = leerColor(json, "fondo");
+            /*Llamamos a leerDouble para recuperar la intensidad de la luz ambiental */
             double luzAmbiental = leerDouble(json, "luz_ambiental");
 
+            /*!? Validacion correcta? podemos tener luz ambiental negativa o mayor a 1 que saturaria los colores
+                manteniendolos en 0 y 1, maximo llegaria a 1? */
             if (luzAmbiental < 0 || luzAmbiental > 1) {
                 throw new IllegalArgumentException("La luz ambiental debe estar entre 0 y 1.");
             }
+            /*!!-- TEMPORAL JSONOBJECT NO DEBE DE PARECER COMO ATRIBUTO DE ESCENA
+                Unicamente fue para validar funcionamiento */
+            List<JsonObject> luces = leerLuces(json);     
+            /*Llamamos a LeerObjetos para recupear la lsita de los objtos que tendra la escena */   
+            List<Objeto3D> objetos = leerObjetos(json);
 
-            leerLuces(json);
-            leerObjetos(json);
-            //Regresamos una escena nueva.
-            return new Escena(ancho, alto);
+            /*Regresamos una escena validad con todas sus propiedades */
+            return new Escena(ancho,alto,camara,fondo,luzAmbiental,luces,objetos);
 
             //Este catch va a cachar 2 cualquiera de los 2 errores
         } catch (JsonParseException | IllegalStateException e) {
-            /*
-            Aparte pasaremos el mensaje del error y con la "e" la informacion
-            que proporciona Gson.
-            */
+            /*Aparte pasaremos el mensaje del error y con la "e" la informacion que proporciona Gson.*/
             throw new IllegalArgumentException(
-                "El archivo no contiene un JSON válido.", e // <- Mensaje amigable + reporte tecnico
-            );
+                "El archivo no contiene un JSON válido.", e // Mensaje linde + reporte tecnico
+                );
         }
     }
 
     /**
+     * Lee y valida un vector.
+     * @param objeto  OBjeto JSON que tiene el campo.
+     * @param campo Nombre del campo.
+     * @return Vector validado.
+     */
+    private static VectorR3 leerVector(JsonObject objeto, String campo) {
+        /* Hacemos una referencia llamando "elemento" (es generico) y del objeto pedimos 
+        el campo*/
+        JsonElement elemento = objeto.get(campo);
+
+        /*Checamos que no sea null y que sea un array */
+        if (elemento == null || !elemento.isJsonArray()) {
+            throw new IllegalArgumentException("El campo '" + campo + "' debe ser un arreglo.");
+        }
+        /*Una vez checado, lo pedimos como array */
+        JsonArray arreglo = elemento.getAsJsonArray();
+
+        /*Todos los vectores que manejaremos deberan de ser de tamanio 3 */
+        if (arreglo.size() != 3) {
+            throw new IllegalArgumentException("El campo '" + campo + "' debe tener tres componentes.");
+        }
+        /*Creamos un arreglo para las componentes 
+            para despues contruir el vector */
+        double[] componentes = new double[3];
+
+        /*Recorremos el arreglo componente a componente */
+        for (int i = 0; i < 3; i++) {
+            /*Pedimos la primera componente */
+            JsonElement componente = arreglo.get(i);
+
+            /*Revisamos que al componente sea un primitivo y que sea un num */
+            if (!componente.isJsonPrimitive()|| !componente.getAsJsonPrimitive().isNumber()) {
+                throw new IllegalArgumentException("Las componentes de '" + campo + "' deben ser numéricas.");
+            }
+            /*Declaramos la varible numero que representara una componente */ 
+            double numero;
+
+            try {
+                /*Lo pedimos como double */
+                numero = componente.getAsDouble();
+                
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("El campo '" + campo + "' debe ser un real.", e);
+            }
+
+            /*Revisamos que sea finito */
+            if (!Double.isFinite(numero)) {
+                throw new IllegalArgumentException("Las componentes de '" + campo + "' deben ser finitas.");
+            }
+            /*Agregamos a nuestro arreglo de componentes */
+            componentes[i] = numero;
+        }
+        /*Regresamo un vector con todas las componentes*/
+        return new VectorR3(componentes[0], componentes[1], componentes[2]);
+    }
+
+    /**
      * Lee y valida los objetos tridimensionales de una escena.
-     *
+     * 
+     * !!-- CON POSIBILIDAD DE AGREGAR MAS OBJETOS
+     * 
      * @param json Objeto JSON de la escena.
-     * @return Arreglo JSON de objetos validados.
+     * @return Lista de objetos tridimensionales construidos y validados.
      * @throws IllegalArgumentException si algún objeto es inválido.
      */
-    private static JsonArray leerObjetos(JsonObject json) {
-        /*
-        Hacemos una referencia llamando "elemento" (es generico) y del objeto pedimos 
-        el campo "objetos"
-         */
-        JsonElement elemento = json.get("objetos");
+    private static List<Objeto3D> leerObjetos(JsonObject json) {
 
-        //Revisamos que no sea null y que sea un array
-        if (elemento == null || !elemento.isJsonArray()) {
-            throw new IllegalArgumentException("El campo 'objetos' debe ser un arreglo.");
+        /*Hacemos una referencia llamando "elemento" (es generico) y del objeto pedimos el campo "objetos"*/
+       JsonElement elemento = json.get("objetos");
+       
+       /*Revisamos que no sea null y que sea un array*/
+       if (elemento == null || !elemento.isJsonArray()) {
+           throw new IllegalArgumentException("El campo 'objetos' debe ser un arreglo.");
         }
-        //Una vez verificado lo pedimos como array.
-        JsonArray objetos = elemento.getAsJsonArray();
 
-        /*
-        Aqui tambien tendremos array dentro de un array
-        Recorreremos los elementos y los analizaremos uno a uno
-         */
-        for (int i = 0; i < objetos.size(); i++) {
-            /*
-            Pedimos el objeto i
-             */
-            JsonElement elementoObjeto = objetos.get(i);
+        /*Una vez verificado lo pedimos como array.*/
+        JsonArray objetosArray = elemento.getAsJsonArray();
+        /*Creamos nuestra lista que almcenara nuestros objetos */
+        List<Objeto3D> objetos = new ArrayList<>();
+        
+        /*Recorreremos los elementos y los analizaremos uno a uno*/
+        for (int i = 0; i < objetosArray.size(); i++) {
+
+            /*Pedimos el objeto i*/
+            JsonElement elementoObjeto = objetosArray.get(i);
 
             //Revisamos que sea un objeto
             if (!elementoObjeto.isJsonObject()) {
                 throw new IllegalArgumentException("El objeto " + i + " debe ser un objeto JSON.");
             }
 
-            //Como ya sabaemos que es un obj, lo pedimos asi
+            /*Como ya sabaemos que es un obj, lo pedimos asi*/
             JsonObject objeto = elementoObjeto.getAsJsonObject();
-            /*
-            Pedimos el elemento "tipo"
-             */
+
+            /*Pedimos el elemento "tipo"*/
             JsonElement tipoElemento = objeto.get("tipo");
+
             /*Revisamos que no sea null, que sea primitivo y que sea un string */
             if (tipoElemento == null || !tipoElemento.isJsonPrimitive() || !tipoElemento.getAsJsonPrimitive().isString()) {
                 throw new IllegalArgumentException("El objeto " + i + " debe tener un tipo válido.");
             }
-            //Una vez verificado, lo pedimos como string
+
+            /*Una vez verificado, lo pedimos como string*/
             String tipo = tipoElemento.getAsString();
 
-            /*!!!!CAMBIAR CUNADO TENGAS LAS FIGURAS Y CONSTRUSCTORES
-            DE MOMENTO SERA GENERICO
-             */
-            /*
-            Una vez que ya tenemos el tipo de objeto
-            entraremos al switch para analisar.
-             */
+            /*Una vez que ya tenemos el tipo de objeto,
+                entraremos al switch para analisar que objeto es y asi
+                pedir sus propiedades.*/
             switch (tipo) {
-                //SI es esfera
                 case "esfera":
-                    //COn LeerTerna buscaremos y comprobaremos centro
-                    leerTerna(objeto, "centro");
+                    //Con LeerVector nos dara el centro
+                    VectorR3 centro = leerVector(objeto, "centro");
                     //Buscaremos radio y obtenemos como double
                     double radio = leerDouble(objeto, "radio");
-                    //Si el radio es menor o igual a 0, es absurdo
+
+                    /*No aceptaremos radio menor o igual a 0 */
                     if (radio <= 0) {
                         throw new IllegalArgumentException("El radio de la esfera " + i + " debe ser positivo.");
                     }
                     //Leeremos el color y verificaremos
-                    leerColor(objeto, "color");
+                    VectorR3 colorEsfera = leerColor(objeto, "color");
+                    /*Una vez verificado todo, lo agregamos a nuestra listita de objetos */
+                    objetos.add(new Esfera(centro, radio, colorEsfera));
                     break;
-                //Si es plano
+                
                 case "plano":
                     //Leeremos su punto perteneciente al plano
-                    leerTerna(objeto, "punto");
+                    VectorR3 punto = leerVector(objeto, "punto");
                     //Leeremos su normal
-                    double[] normal = leerTerna(objeto, "normal");
+                    VectorR3 normal = leerVector(objeto, "normal");
                     /*Checamos que la normal no sea el vector 0, pues de ser
                     asi tendriamos un plano sin orientacion y como depues debemos
                     de sacar longitud caemos en division entre 0.
                      */
-                    if (normal[0] == 0 && normal[1] == 0 && normal[2] == 0) {
-                        throw new IllegalArgumentException( "La normal del plano " + i + " no puede ser el vector cero.");
+                    if (normal.getX() == 0 && normal.getY() == 0 && normal.getZ() == 0) {
+                        throw new IllegalArgumentException("La normal del plano " + i + " no puede ser el vector cero.");
                     }
                     //Leemos color
-                    leerColor(objeto, "color");
+                    VectorR3 colorPlano = leerColor(objeto, "color");
+                    /*Una vez comprobado todo agregaremos, a nuestra listita de objetos */
+                    objetos.add(new Plano(normal, punto, colorPlano));
                     break;
 
-                //POr si no encontramos el objeto que corresponde    
+                /*Por si nos pasan otro objetos que no reconocemos*/
                 default:
                     throw new IllegalArgumentException("Tipo de objeto desconocido: " + tipo);
             }
         }
-
+        /*Regresamos la lista ya con todos los objetos validados. */
         return objetos;
     }
 
@@ -200,33 +263,31 @@ public class LectorEscenaJson {
      * Lee y valida la información de la cámara.
      *
      * @param json Objeto JSON principal de la escena.
-     * @return Objeto JSON correspondiente a la cámara validada.
+     * @return Camara que tendra la escena.
      * @throws IllegalArgumentException si los datos son inválidos.
      */
-    private static JsonObject leerCamara(JsonObject json) {
+    private static Camara leerCamara(JsonObject json, int ancho, int alto) {
         
-        /*
-        Hacemos una referencia llamando "elemento" (es generico) y del objeto pedimos 
-        el campo
+        /*Hacemos una referencia llamando "elemento" (es generico)
+         y del objeto pedimos el campo
          */
         JsonElement elemento = json.get("camara");
 
         //Revisamos que no sea null y que sea un objeto.
         if (elemento == null || !elemento.isJsonObject()) {
-            throw new IllegalArgumentException(
-                "Falta el objeto 'camara' o tiene un formato inválido.");
+            throw new IllegalArgumentException("Falta el objeto 'camara' o tiene un formato inválido.");
         }
 
         /*Ya vimos que no es null y que es un objeto,
-        lo pedimos como objeto.
-        */
+        lo pedimos como objeto.*/
         JsonObject camara = elemento.getAsJsonObject();
 
         /*
-        Llamamos a leerTern para que lea los arreglos correspondientes.
+        Llamamos a leerVector para que lea posicion y miraA
          */
-        double[] posicion = leerTerna(camara, "posicion");
-        double[] miraA = leerTerna(camara, "mira_a");
+        VectorR3 posicion = leerVector(camara, "posicion");
+        VectorR3 miraA = leerVector(camara, "mira_a");
+
         /*
         Llamamos a LeerDouble para que indetifique el fov
         y revise que sea valido
@@ -235,151 +296,127 @@ public class LectorEscenaJson {
 
         /*
         Comprobamos que 0<fov<180
-        pues si fov = 180 seria vista de pescado xd.
+        pues si fov = 180 al calcular el viewport caemos en divicion entre 0.
          */
         if (fov <= 0 || fov >= 180) {
             throw new IllegalArgumentException("El campo 'fov' debe estar entre 0 y 180 grados.");
         }
 
         /*
-        Debemos de revisar que la posicion y la mira no 
-        sean el mismo punto, pues seria absurdo 
-        mirar justo donde estas.
-         */
-        boolean mismaPosicion = true;
-
-        /*
-        Recorremos las posiciones y verificamos que no sea iguales.
-        Y solo basta con que una sea diferente.
-         */
-        for (int i = 0; i < 3; i++) {
-            if (posicion[i] != miraA[i]) {
-                mismaPosicion = false;
-                break;
-            }
-        }
-        //Comprobacion.
-        if (mismaPosicion) {
+        Debemos de revisar que la posicion y la mira no sean el mismo punto, pues seria raro 
+            mirar justo donde estas.*/
+        if (posicion.getX() == miraA.getX() && posicion.getY() == miraA.getY() && posicion.getZ() == miraA.getZ()) {
             throw new IllegalArgumentException(
                 "La cámara no puede mirar hacia su propia posición.");
         }
-
-        return camara;
+        /*Regresamos la camara ya validad. */
+        return new Camara(posicion, miraA, fov, ancho, alto);
     }
     
     /**
+     * !!--TEMPORAL no debemos de tener JsonObject
+     * de momento es para test y funcionamiento.
+     * 
      * Lee y valida las luces puntuales de una escena.
      * 
-     * Para este metodo debemos de considerar que
-     * recorremos arrays dentro de arrays.
      * @param json Objeto JSON  de la escena.
-     * @return Arreglo JSON de luces validadas.
+     * @return DEBEMOS DE REGRESAR LISTA DE LUCES NO DE JSONOBJECT
      * @throws IllegalArgumentException si las luces son inválidas.
      */
-    private static JsonArray leerLuces(JsonObject json) {
+    private static List<JsonObject> leerLuces(JsonObject json) {
 
-        /*
-        Hacemos una referencia llamando "elemento" (es generico) y del json pedimos 
-        el campo
-         */
+        /*Hacemos una referencia llamando "elemento" (es generico) y del json pedimos 
+        el campo*/
         JsonElement elemento = json.get("luces");
 
         /*
-        Comprobamos que sea no nullo y que sea aun array.
+        Comprobamos que sea no nulL y que sea aun array.
          */
         if (elemento == null || !elemento.isJsonArray()) {
-            throw new IllegalArgumentException(
-                "El campo 'luces' debe ser un arreglo.");
+            throw new IllegalArgumentException("El campo 'luces' debe ser un arreglo.");
         }
+
         //Lo pedimos como array.
         JsonArray luces = elemento.getAsJsonArray();
+        /*Creamos nuestra lista de luces */
+        /*CAMBIAR A LUCESPUNTUALES.CLASS */
+        List<JsonObject> lucesTotales = new ArrayList<>();
 
         /*Debemos de ver que minimo tenemos una luz */
+        /* !? podemos tener 0 luces?*/
         if (luces.size() == 0) {
-            throw new IllegalArgumentException(
-                "La escena debe contener al menos una luz.");
+            throw new IllegalArgumentException("La escena debe contener al menos una luz.");
         }
         /*
-        Recorreremos el array principa, y analizaremos
-        cada luz independientemente.
+        Recorreremos el array y vamos a ver cada luz independientemente.
          */
         for (int i = 0; i < luces.size(); i++) {
-             /*
-            Hacemos una referencia llamando "elementoLuz" (es generico) y del
-            array principal tomamos el i.
+
+             /* Hacemos una referencia llamando "elementoLuz" (es generico) y del 
+                array principal tomamos el i.
              */
             JsonElement elementoLuz = luces.get(i);
 
             /*Vemos que sea un objeto*/
             if (!elementoLuz.isJsonObject()) {
-                throw new IllegalArgumentException(
-                    "La luz " + i + " debe ser un objeto JSON.");
+                throw new IllegalArgumentException("La luz " + i + " debe ser un objeto JSON.");
             }
             
-            /*!!!
+            /*!!
             AQUI DEBEMOS DE IMPLEMENTAR LUZ PUNTUAL
-            !!!1*/
+            !!*/
+
             /*
             Obtenemos y creamos luz puntual.
              */
             JsonObject luz = elementoLuz.getAsJsonObject();
 
-            /*
-            Despues con leerTerna vamos a buscar el array "posicion"
-            y validarlo
-            */
-            leerTerna(luz, "posicion");
-            /*Ahora checamos que la intensidad sea valida */
+            /*Despues con leerVector buscamos posicion*/
+            VectorR3 posicion = leerVector(luz, "posicion");
+            /*Buscamos y checamos que la intensidad sea valida */
             double intensidad = leerDouble(luz, "intensidad");
-
-            /*
-            leerDouble nos da un real el cual puede ser negativo
-            pero no podemos tener una luz negativa.
-             */
-            if (intensidad < 0) {
-                throw new IllegalArgumentException(
-                    "La intensidad de la luz " + i + " no puede ser negativa.");
-            }
+            
+            /*Comprobamos que la intensidad sea valida*/
+            /* !? Podemos tener intensidad negativa y topa hasta? */
+           if (intensidad < 0) {
+               throw new IllegalArgumentException("La intensidad de la luz " + i + " no puede ser negativa.");
+                }
+            
+            /*Una vez validad agrgamos la luz a nuestra lsita */
+            lucesTotales.add(luz);
         }
         //!!!!DEBEMOS DE REGRESAR LUCES PUNTUAL
-        return luces;
+        return lucesTotales;
     }
 
     /**
      * Lee y valida un color RGB desde un objeto JSON.
      *
-     * @param objeto Objeto JSON que tiene el color.
-     * @param campo Nombre del campo paraa leer.
-     * @return Arreglo con las componentes RGB.
+     * @param objeto Objeto JSON que contiene el color.
+     * @param campo Nombre del campo que se vamos a leer.
+     * @return VectorR3 con las componentes RGB.
      * @throws IllegalArgumentException si el color es inválido.
      */
-    private static double[] leerColor(JsonObject objeto, String campo) {
-        //Llamamos al metodo encargado de parsear.
-        double[] color = leerTerna(objeto, campo);
+    private static VectorR3 leerColor(JsonObject objeto, String campo) {
+
+        // Leemos y validamos los componentes.
+        VectorR3 color = leerVector(objeto, campo);
 
         /*
-        Como un color debe de cumplir que 
-                (r,g,b) ∈ [0,1]^3 
-        vamos a recorrer los numeros que ya parseamos
-        y verificar que estan en este rango
+         Como un color debe cumplir:
+         (r,g,b) ∈ [0,1]^3 comprobamos que cada componente esté en ese intervalo.
          */
-        for (int i = 0; i < color.length; i++) {
-            /*
-            Menor a 0 y mayor a 1 son los casos donde 
-            seria un color invalido.
-            */
-            if (color[i] < 0 || color[i] > 1) {
+        double[] componentes = {color.getX(), color.getY(), color.getZ()};
+        
+        for (double componente : componentes) {
+            if (componente < 0 || componente > 1) {
                 throw new IllegalArgumentException("Las componentes de '" + campo+ "' deben estar entre 0 y 1.");
             }
         }
-
+        /*Regresamos el vector que representara un color */
         return color;
     }
 
-
-
-
-    //---Auxiliares para leer JSON---//
 
     /**
      * Recuperamos un entero positico desde un obj JSON.
@@ -400,11 +437,9 @@ public class LectorEscenaJson {
         como primitivo y despues vemos si es numero.
          */
         if (valor == null || !valor.isJsonPrimitive() || !valor.getAsJsonPrimitive().isNumber()) {
-            throw new IllegalArgumentException(
-                "El campo '" + campo + "' debe ser numérico."
-            );
+            throw new IllegalArgumentException("El campo '" + campo + "' debe ser numérico.");
         }
-
+        //Declaramos numero que regresaremos
         int numero;
 
         try {
@@ -413,9 +448,7 @@ public class LectorEscenaJson {
 
             //Cacha error de conversion.
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(
-                "El campo '" + campo + "' debe ser un entero.", e
-            );
+            throw new IllegalArgumentException("El campo '" + campo + "' debe ser un entero.", e);
         }
 
         /*
@@ -423,11 +456,9 @@ public class LectorEscenaJson {
         pues no tiene mucho sentido hacer escena de alguna dimension 0 xd.
          */
         if (numero <= 0) {
-            throw new IllegalArgumentException(
-                "El campo '" + campo + "' debe ser positivo."
-            );
+            throw new IllegalArgumentException("El campo '" + campo + "' debe ser positivo.");
         }
-
+        /*Numero extraido correctamente */
         return numero;
     }
 
@@ -437,7 +468,6 @@ public class LectorEscenaJson {
      * @param objeto Objeto JSON que tiene el campo.
      * @param campo Nombre del campo.
      * @return Valor numérico del campo.
-     * @throws IllegalArgumentException si el campo es inválido.
      */
     private static double leerDouble(JsonObject objeto, String campo) {
         /*
@@ -449,105 +479,24 @@ public class LectorEscenaJson {
         Revisamos que no sea null, que sea primitivo y que sea un num.
          */
         if (elemento == null || !elemento.isJsonPrimitive() || !elemento.getAsJsonPrimitive().isNumber()) {
-            throw new IllegalArgumentException(
-                "El campo '" + campo + "' debe ser numérico."
-            );
+            throw new IllegalArgumentException("El campo '" + campo + "' debe ser numérico.");
         }
         //Como ya comprobamos lo pedimos como double
-        double valor = elemento.getAsDouble();
+        double valor;
 
+        try {
+            //Intentamos pasar a double
+            valor = Double.parseDouble(elemento.getAsString());
+
+            //Cacha error de conversion.
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("El campo '" + campo + "' debe ser un real.", e);
+        }
         //Revisamos que sea finito
         if (!Double.isFinite(valor)) {
-            throw new IllegalArgumentException(
-                "El campo '" + campo + "' debe ser finito."
-            );
+            throw new IllegalArgumentException("El campo '" + campo + "' debe ser finito.");
         }
 
         return valor;
     }
-
-
-    /**
-     * Lee un arreglo JSON de exactamente tres números finitos.
-     *
-     * @param objeto Objeto JSON que tiene el campo.
-     * @param campo Nombre del campo para leer.
-     * @return Arreglo con las tres componentes numéricas.
-     * @throws IllegalArgumentException si el campo es inválido.
-     */
-    private static double[] leerTerna(JsonObject objeto, String campo) {
-        /*
-        Hacemos una referencia llamando "elemento" (es generico) y del objeto pedimos 
-        el campo
-         */
-        JsonElement elemento = objeto.get(campo);
-        /*
-        Revisamos que no sea null y que sea un array
-         */
-        if (elemento == null || !elemento.isJsonArray()) {
-            throw new IllegalArgumentException(
-                "El campo '" + campo + "' debe ser un arreglo.");
-        }
-
-        /*
-        Ya vimos que si es un arreglo, lo instanciamos como "arreglo"
-         */
-        JsonArray arreglo = elemento.getAsJsonArray();
-
-        /*
-        Para todos nuestros casos deben de ser de 3 elementos
-        tanto para terna como para RGB y los otros.
-         */
-        if (arreglo.size() != 3) {
-            throw new IllegalArgumentException(
-                "El campo '" + campo + "' debe tener tres componentes."
-            );
-        }
-        /*
-        Lo guarderemos en un arreglo (despues sera vectorR3)
-         */
-        double[] componentes = new double[3];
-
-        /*
-        Como JsonArray no nos dice que tiene, es decir que es un 
-        "array generico" debemos de ver que no tenga otra cosa que 
-        no sea un INT o DOUBLE.
-         */
-        for (int i = 0; i < 3; i++) {
-            /*
-            Recorremos elemento por elemento, recuperando un elemento
-            y obteniendolo como generico.
-            */
-            JsonElement componente = arreglo.get(i);
-
-            /*
-            Comprobamos que sea primitivo, y que sea un num.
-             */
-            if (!componente.isJsonPrimitive() || !componente.getAsJsonPrimitive().isNumber()) {
-                throw new IllegalArgumentException(
-                    "Las componentes de '" + campo + "' deben ser numéricas."
-                );
-            }
-            /*
-            Como ya sabemos que efectivamente es un numero,
-            lo pedimos como tal.
-            */
-            double numero = componente.getAsDouble();
-
-            //Debemos de ver que no sea infinito o NaN.
-            if (!Double.isFinite(numero)) {
-                throw new IllegalArgumentException(
-                    "Las componentes de '" + campo + "' deben ser finitas."
-                );
-            }
-            //guardamos componentes
-            componentes[i] = numero;
-            /*Asi lo hacemos con los 3 elementos del arreglo O(n) */
-        }
-
-        return componentes;
-    }
-
-
-
 }

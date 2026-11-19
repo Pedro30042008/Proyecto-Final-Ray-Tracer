@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 
 import escena.Escena;
@@ -56,10 +55,7 @@ public class Main {
         try {
             Escena escena = LectorEscenaJson.leer(rutaEntrada);
 
-            System.out.println("Escena leída correctamente.");
-            System.out.println("Dimensiones: " + escena.getAncho() + " x " + escena.getAlto());
-            System.out.println("Archivo de salida: " + rutaSalida);
-            System.out.println("Trabajadores: " + trabajadores);
+            System.out.println(escena);
 
             //RENDERIZADO Y ESCRIBITPPM//
 
