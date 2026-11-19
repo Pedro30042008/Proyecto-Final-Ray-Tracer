@@ -14,6 +14,9 @@ public class Camara {
     private final VectorR3 miraA;
     private final double fov;
 
+    /* Distancia de la cámara al viewport. */
+    private static final double DISTANCIA_VIEWPORT = 1.0;
+
     /* Dimensiones de la imagen en píxeles. */
     private final int ancho;
     private final int alto;
@@ -88,16 +91,11 @@ public class Camara {
         /* Calculamos v. */
         this.v = w.productoCruz(u);
 
-        /* Calculamos las dimensiones del viewport */
-
-        /* Distancia de la cámara al viewport. */
-        double distancia = 1.0;
-
         /* Convertimos el FOV de grados a radianes. */
         double angulo = Math.toRadians(fov);
 
         /* Calculamos las dimensiones del viewport */
-        this.anchoViewport = 2 * distancia * Math.tan(angulo / 2);
+        this.anchoViewport = 2 * DISTANCIA_VIEWPORT * Math.tan(angulo / 2);
         this.altoViewport = anchoViewport * ((double) alto / ancho);
     }
 
@@ -106,21 +104,42 @@ public class Camara {
      * indicado por su columna y fila.
      */
     public Rayo generarRayo(int columna, int fila) {
-        // PASO 7: Validar los índices del píxel.
 
-        // PASO 8: Encontrar el centro del viewport.
+        /* Validar que el pixel pertenezca a la imagen */
 
-        // PASO 9: Calcular el desplazamiento horizontal.
+        if (columna < 0 || columna >= ancho ||
+                fila < 0 || fila >= alto) {
+            throw new IllegalArgumentException(
+                    "El pixel está fuera de la imagen");
+        }
 
-        // PASO 10: Calcular el desplazamiento vertical.
+        /* Calcular el centro del Viewport */
+        VectorR3 centroViewport = posicion.resta(w.productoPorUnEscalar(DISTANCIA_VIEWPORT));
 
-        // PASO 11: Encontrar el centro del píxel.
+        /* Calcular el desplazamiento horizontal. */
+        double desplazamientoHorizontal = (columna + 0.5 - ((double) ancho / 2))
+                * (anchoViewport / ancho);
 
-        // PASO 12: Calcular la dirección del rayo.
+        /* Calcular el desplazamiento horizontal en R3. */
+        VectorR3 horizontal = u.productoPorUnEscalar(desplazamientoHorizontal);
 
-        // PASO 13: Devolver el Rayo.
+        /* Calcular el desplazamiento vertical. */
+        double desplazamientoVertical = (-fila - 0.5 + ((double) alto / 2))
+                * (altoViewport / alto);
 
-        throw new UnsupportedOperationException(
-                "Pendiente de implementar");
+        /* Calcular el desplazamiento vertical en R3. */
+        VectorR3 vertical = v.productoPorUnEscalar(desplazamientoVertical);
+
+        /* Calcular el centro del píxel. */
+        VectorR3 centroPixel = centroViewport.suma(
+                horizontal.suma(vertical)
+        );
+
+        /* Calcular la dirección del rayo. */
+        VectorR3 direccion = centroPixel.resta(posicion);
+
+        /* Devolver el Rayo. */
+
+        return new Rayo(new VectorR3(posicion), direccion);
     }
 }
