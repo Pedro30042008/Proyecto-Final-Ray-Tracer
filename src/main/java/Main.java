@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 
 import escena.Escena;

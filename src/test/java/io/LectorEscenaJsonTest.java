@@ -1,4 +1,3 @@
-
 package io;
 
 /*
@@ -16,7 +15,11 @@ import org.junit.jupiter.api.Test; // importamos JUnit 5 (Jupiter)
 
 import escena.Escena; //Importamos la clase 
 
-
+/**
+ * Pruebas unitarias para la clase {@link LectorEscenaJson}.
+ *
+ * Comprueba la lectura valida de las escena desde un JSON.
+ */
 public class LectorEscenaJsonTest {
     
 

@@ -33,3 +33,8 @@ java -cp "target/classes:$(cat classpath.txt)" Main \
 src/test/resources/escenas/prueba_dimensiones_IMPL-COMPLETAcorr.json \
 salida.ppm \
 --trabajadores 1
+
+
+Para ejecutar la prueba del escritor PPM
+mvn clean test
+java -cp target/test-classes:target/classes io.PruebaVisualPPM
