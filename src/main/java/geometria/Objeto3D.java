@@ -2,6 +2,7 @@ package geometria;
 
 import matematicas.Rayo;
 import matematicas.VectorR3;
+import matematicas.Verificador;
 
 /**
  * Representa un objeto geométrico con un color uniforme.
@@ -10,7 +11,7 @@ import matematicas.VectorR3;
 public abstract class Objeto3D {
 
     /* Color del objeto, con componentes RGB entre 0 y 1. */
-    private VectorR3 color;
+    protected VectorR3 color;
 
     /**
      * Construye un objeto geométrico con un color uniforme.
@@ -18,19 +19,8 @@ public abstract class Objeto3D {
      * @param color componentes RGB del objeto.
      */
     protected Objeto3D(VectorR3 color) {
-	// Verificamos que pasen un color distinto de null.
-        if (color == null)
-            throw new IllegalArgumentException(
-                "El color no puede ser null.");
-
-        // Cada componente RGB debe estar entre 0 y 1.
-        if (!(color.getX() >= 0 && color.getX() <= 1
-           && color.getY() >= 0 && color.getY() <= 1
-           && color.getZ() >= 0 && color.getZ() <= 1))
-            throw new IllegalArgumentException(
-                "Las componentes RGB deben estar entre 0 y 1.");
-
-        this.color = color;
+	// Verificamos el color y lo asignamos.
+        this.color = Verificador.verificarColor(color);
     }
 
     /**
@@ -48,7 +38,8 @@ public abstract class Objeto3D {
      * @param color nuevo color del objeto.
      */
     public void setColor(VectorR3 color) {
-        this.color = color;
+	// Verificamos el color y lo asignamos.
+        this.color = Verificador.verificarColor(color);
     }
 
     /**
