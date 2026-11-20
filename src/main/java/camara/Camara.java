@@ -139,7 +139,6 @@ public class Camara {
         VectorR3 direccion = centroPixel.resta(posicion);
 
         /* Devolver el Rayo. */
-
         return new Rayo(new VectorR3(posicion), direccion);
     }
 }
