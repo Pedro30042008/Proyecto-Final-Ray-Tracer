@@ -2,6 +2,9 @@ import java.io.IOException;
 
 import escena.Escena;
 import io.LectorEscenaJson;
+import io.EscritorPPM;
+import renderizado.Renderizador;
+import matematicas.VectorR3;
 
 /**
  * MAIN
@@ -16,7 +19,7 @@ public class Main {
     *
     * Recibe las rutas del JSON de entrada y del PPM de salida.
     * Opcionalmente, permite indicar el número de trabajadores.
-    * V2
+    * V2.1
     * @param cositas argumentos de ejecución.
     */
     public static void main(String[] cositas) {
@@ -78,10 +81,27 @@ public class Main {
             if (trabajadores < 1 || trabajadores > 8){
                 throw new IllegalArgumentException("Los trabjadores deben de estar entre 1 y 8");
             }
+            /* 
+            Escena escena = LectorEscenaJson.leer(rutaEntrada);
+            System.out.println(escena);
+            */
 
+            /* Leemos y construimos la escena desde el archivo JSON. */
             Escena escena = LectorEscenaJson.leer(rutaEntrada);
 
             System.out.println(escena);
+
+            /* Creamos el renderizador con la escena obtenida. */
+            Renderizador renderizador = new Renderizador(escena);
+
+            /* Renderizamos la escena y obtenemos los colores de los píxeles. */
+            VectorR3[][] pixeles = renderizador.renderizar();
+
+            /* Escribimos los colores en un archivo PPM P3. */
+            EscritorPPM.escribir(rutaSalida, pixeles);
+
+            System.out.println("Imagen generada correctamente: " + rutaSalida);
+
 
         } catch (NumberFormatException e) {
             System.err.println("El número de trabajadores debe ser un entero.");

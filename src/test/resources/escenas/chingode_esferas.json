@@ -1,0 +1,100 @@
+
+{
+  "imagen": {
+    "ancho": 1000,
+    "alto": 650
+  },
+  "camara": {
+    "posicion": [7, 5, 12],
+    "mira_a": [0, 0, -5],
+    "fov": 65
+  },
+  "fondo": [0.04, 0.06, 0.13],
+  "luz_ambiental": 0.25,
+  "luces": [
+    {
+      "posicion": [3, 9, 2],
+      "intensidad": 1.0
+    },
+    {
+      "posicion": [-8, 5, -4],
+      "intensidad": 0.7
+    },
+    {
+      "posicion": [0, 3, -12],
+      "intensidad": 0.5
+    },
+    {
+      "posicion": [6, 2, -7],
+      "intensidad": 0.3
+    }
+  ],
+  "objetos": [
+    {
+      "tipo": "esfera",
+      "centro": [-3, 0, -5],
+      "radio": 1.5,
+      "color": [0.95, 0.15, 0.15]
+    },
+    {
+      "tipo": "esfera",
+      "centro": [0, 0, -5],
+      "radio": 2,
+      "color": [0.15, 0.75, 0.95]
+    },
+    {
+      "tipo": "esfera",
+      "centro": [3.5, 0, -6],
+      "radio": 1.4,
+      "color": [0.95, 0.75, 0.1]
+    },
+    {
+      "tipo": "esfera",
+      "centro": [-1.8, 2.5, -8],
+      "radio": 0.9,
+      "color": [0.8, 0.2, 0.95]
+    },
+    {
+      "tipo": "esfera",
+      "centro": [1.5, 3, -9],
+      "radio": 1.1,
+      "color": [0.2, 0.95, 0.45]
+    },
+    {
+      "tipo": "esfera",
+      "centro": [-5, -0.8, -10],
+      "radio": 1.2,
+      "color": [0.95, 0.4, 0.1]
+    },
+    {
+      "tipo": "esfera",
+      "centro": [5, 1.5, -11],
+      "radio": 1.6,
+      "color": [0.95, 0.35, 0.65]
+    },
+    {
+      "tipo": "esfera",
+      "centro": [0, -1, -12],
+      "radio": 2.5,
+      "color": [0.3, 0.35, 0.85]
+    },
+    {
+      "tipo": "plano",
+      "punto": [0, -2.5, 0],
+      "normal": [0, 1, 0],
+      "color": [0.25, 0.28, 0.35]
+    },
+    {
+      "tipo": "plano",
+      "punto": [0, 0, -17],
+      "normal": [0, 0, 1],
+      "color": [0.12, 0.15, 0.25]
+    },
+    {
+      "tipo": "plano",
+      "punto": [-9, 0, 0],
+      "normal": [1, 0, 0],
+      "color": [0.18, 0.2, 0.3]
+    }
+  ]
+}
