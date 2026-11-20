@@ -7,6 +7,7 @@ import geometria.Objeto3D;
 import geometria.Esfera;
 import geometria.Plano;
 import camara.Camara;
+import iluminacion.LuzPuntual;
 
 //Biblioteca para leer JSON
 import com.google.gson.JsonElement;
@@ -83,14 +84,12 @@ public class LectorEscenaJson {
             /*Llamamos a leerDouble para recuperar la intensidad de la luz ambiental */
             double luzAmbiental = leerDouble(json, "luz_ambiental");
 
-            /*!? Validacion correcta? podemos tener luz ambiental negativa o mayor a 1 que saturaria los colores
-                manteniendolos en 0 y 1, maximo llegaria a 1? */
+            /*Verificamos que las luces esten entre 0 y 1 */
             if (luzAmbiental < 0 || luzAmbiental > 1) {
                 throw new IllegalArgumentException("La luz ambiental debe estar entre 0 y 1.");
             }
-            /*!!-- TEMPORAL JSONOBJECT NO DEBE DE PARECER COMO ATRIBUTO DE ESCENA
-                Unicamente fue para validar funcionamiento */
-            List<JsonObject> luces = leerLuces(json);     
+            
+            List<LuzPuntual> luces = leerLuces(json);     
             /*Llamamos a LeerObjetos para recupear la lsita de los objtos que tendra la escena */   
             List<Objeto3D> objetos = leerObjetos(json);
 
@@ -323,7 +322,7 @@ public class LectorEscenaJson {
      * @return DEBEMOS DE REGRESAR LISTA DE LUCES NO DE JSONOBJECT
      * @throws IllegalArgumentException si las luces son inválidas.
      */
-    private static List<JsonObject> leerLuces(JsonObject json) {
+    private static List<LuzPuntual> leerLuces(JsonObject json) {
 
         /*Hacemos una referencia llamando "elemento" (es generico) y del json pedimos 
         el campo*/
@@ -339,14 +338,8 @@ public class LectorEscenaJson {
         //Lo pedimos como array.
         JsonArray luces = elemento.getAsJsonArray();
         /*Creamos nuestra lista de luces */
-        /*CAMBIAR A LUCESPUNTUALES.CLASS */
-        List<JsonObject> lucesTotales = new ArrayList<>();
+        List<LuzPuntual> lucesTotales = new ArrayList<>();
 
-        /*Debemos de ver que minimo tenemos una luz */
-        /* !? podemos tener 0 luces?*/
-        if (luces.size() == 0) {
-            throw new IllegalArgumentException("La escena debe contener al menos una luz.");
-        }
         /*
         Recorreremos el array y vamos a ver cada luz independientemente.
          */
@@ -362,10 +355,6 @@ public class LectorEscenaJson {
                 throw new IllegalArgumentException("La luz " + i + " debe ser un objeto JSON.");
             }
             
-            /*!!
-            AQUI DEBEMOS DE IMPLEMENTAR LUZ PUNTUAL
-            !!*/
-
             /*
             Obtenemos y creamos luz puntual.
              */
@@ -377,15 +366,13 @@ public class LectorEscenaJson {
             double intensidad = leerDouble(luz, "intensidad");
             
             /*Comprobamos que la intensidad sea valida*/
-            /* !? Podemos tener intensidad negativa y topa hasta? */
-           if (intensidad < 0) {
+           if (intensidad < 0 || intensidad > 1) {
                throw new IllegalArgumentException("La intensidad de la luz " + i + " no puede ser negativa.");
                 }
             
             /*Una vez validad agrgamos la luz a nuestra lsita */
-            lucesTotales.add(luz);
+            lucesTotales.add(new LuzPuntual(posicion, intensidad));
         }
-        //!!!!DEBEMOS DE REGRESAR LUCES PUNTUAL
         return lucesTotales;
     }
 
