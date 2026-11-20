@@ -144,6 +144,7 @@ public class LectorEscenaJsonTest {
     }
 
     /**
+     * Test
      * Prueba unitaria que verifica que el lector rechaza un archivo JSON
      * con un valor FOV inválido o fuera de rango.
      * Seguiremos el modelo Arrange–Act–Assert.
@@ -164,6 +165,7 @@ public class LectorEscenaJsonTest {
 
 
     /**
+     * Test
      * Prueba unitaria que verifica que el lector rechaza un archivo JSON
      * que contiene una intensidad lumínica negativa.
      * Seguiremos el modelo Arrange–Act–Assert.
@@ -184,6 +186,7 @@ public class LectorEscenaJsonTest {
 
 
     /**
+     * Test
      * Prueba unitaria que verifica que el lector rechaza un archivo JSON
      * que incluye un tipo de objeto desconocido.
      * Seguiremos el modelo Arrange–Act–Assert.
@@ -199,5 +202,22 @@ public class LectorEscenaJsonTest {
              () -> LectorEscenaJson.leer(ruta));
         //Verificamos que efectivamente truene donde queremos    
         assertTrue(excepcion.getMessage().contains("Tipo de objeto desconocido"));           
+    }
+    /**
+     * Test
+     * Prueba unitaria que verifica que el lector
+     * acepata no tener luces puntuales y que lee
+     * correctamente la luz ambiental
+     */
+    @Test
+    void debeAceptarEscenaSinLucesPuntuales() throws IOException {
+    
+        String ruta =
+            "src/test/resources/escenas/prueba_sin_luces_corr.json";
+    
+        Escena escena = LectorEscenaJson.leer(ruta);
+    
+        assertTrue(escena.getLucesPuntuales().isEmpty());
+        assertEquals(0.3, escena.getLuzAmbiental());
     }
 }
