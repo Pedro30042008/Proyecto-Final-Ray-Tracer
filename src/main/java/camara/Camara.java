@@ -101,9 +101,14 @@ public class Camara {
 
     /**
      * Genera el rayo que atraviesa el centro del píxel
-     * indicado por su columna y fila.
+     * indicado por su fila y columna.
+     *
+     * @param fila índice de la fila del píxel, comenzando en cero.
+     * @param columna índice de la columna del píxel, comenzando en cero.
+     * @return el rayo que sale de la cámara y atraviesa el centro del píxel.
+     * @throws IllegalArgumentException si el píxel está fuera de la imagen.
      */
-    public Rayo generarRayo(int columna, int fila) {
+    public Rayo generarRayo(int fila, int columna) {
 
         /* Validar que el pixel pertenezca a la imagen */
 

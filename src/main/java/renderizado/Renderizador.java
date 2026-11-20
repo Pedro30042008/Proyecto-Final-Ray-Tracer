@@ -84,19 +84,36 @@ public class Renderizador {
     /**
      * Calcula los colores de todos los píxeles de la imagen.
      *
-     * @return matriz de colores organizada por filas y columnas.
+     * @return matriz de colores RGB organizada por filas y columnas.
      */
     public VectorR3[][] renderizar() {
 
-        // PASO 6: Crear la matriz de píxeles.
+        /* Obtener la cámara de la escena. */
+        Camara camara = escena.getCamara();
 
-        // PASO 7: Recorrer filas y columnas.
+        /* Obtener las dimensiones de la imagen. */
+        int ancho = escena.getAncho();
+        int alto = escena.getAlto();
 
-        // PASO 8: Generar un rayo para cada píxel.
+        /* Crear la matriz de píxeles. */
+        VectorR3[][] pixeles = new VectorR3[alto][ancho];
 
-        // PASO 9: Calcular y guardar su color.
+        /* Recorrer todas las filas. */
+        for(int fila = 0; fila < alto; fila++){
+            /* Recorrer todas las columnas. */
+            for(int columna = 0; columna < ancho; columna++){
 
-        throw new UnsupportedOperationException(
-                "Pendiente de implementar");
+                /* Generar el rayo correspondiente. */
+                Rayo rayo = camara.generarRayo(fila, columna);
+
+                /* Calcular el color del rayo. */
+                VectorR3 color = calcularColor(rayo);
+
+                /* Guardar el color en la matriz. */
+                pixeles[fila][columna] = color;
+            }
+        }
+        /* Devolver la matriz completa. */
+        return pixeles;
     }
 }
