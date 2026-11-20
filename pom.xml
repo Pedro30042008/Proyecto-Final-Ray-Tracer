@@ -2,51 +2,188 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+			     https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+  <!-- Identificacion del proyecto -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>mx.unam.ciencias.myp</groupId>
+  <artifactId>raytracer</artifactId>
+  <version>MYP</version>
 
-    <groupId>unam.fc</groupId>
-    <artifactId>raytracer</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <!-- Tipo de archivo que genera Maven -->
+  <packaging>jar</packaging>
 
-    <properties>
-        <maven.compiler.release>11</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+  <name>Proyecto-Final-Ray-Tracer</name>
+  <description>
+    Proyecto Final de Modelado y Programación: Ray Tracer.
+  </description>
+  <url>https://github.com/Pedro30042008/Proyecto-Final-Ray-Tracer/</url>
+  
+  <organization>
+    <name>Equipo Compumagos - Modelado y Programación</name>
+    <url>https://github.com</url>
+  </organization>
 
-    <dependencies>
-        <!-- Biblioteca para leer archivos JSON -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.11.0</version>
-        </dependency>
+  <!-- Propiedades generales -->
+  <properties>
+    <!-- Codificacion de los archivos fuente -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Biblioteca para realizar pruebas unitarias -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.11.0</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <!-- Compilar utilizando las API de Java 11 -->
+    <maven.compiler.release>11</maven.compiler.release>
+  </properties>
 
-    <build>
-        <plugins>
-            <!-- Compilación utilizando Java 11 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-            </plugin>
+  <build>
 
-            <!-- Ejecución de pruebas JUnit 5 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-            </plugin>
-        </plugins>
-    </build>
+    <!-- Nombre del archivo JAR -->
+    <finalName>raytracer</finalName>
+    
+    <plugins>
+
+      <!-- Verifica los requisitos de Maven -->
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+	<!-- Version del plugin -->
+        <version>3.0.0-M3</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+		  <!-- Versión mínima requerida de Maven -->
+                  <version>[3.2.5,)</version>
+                </requireMavenVersion>
+		<requireJavaVersion>
+		  <!-- Versión mínima requerida de JDK -->
+                  <version>[11,)</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Compilar los archivos de Java -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+	
+        <configuration>
+
+	  <!-- Advertencias adicionales del compilador -->
+          <compilerArgs>
+	    <!-- Detecta el uso de API obsoletas -->
+	    <arg>-Xlint:deprecation</arg>
+
+	    <!-- Detecta operaciones con tipos genericos
+	         cuya seguridad no puede comprobarse -->
+	    <arg>-Xlint:unchecked</arg>
+	    
+	  </compilerArgs>
+
+	  <!-- Incluir información para depurar el codigo -->
+          <debug>true</debug>
+
+	  <!-- Guarda lineas, variables y archivo fuente -->
+          <debuglevel>lines,vars,source</debuglevel>
+
+	  <!-- Mostrar las advertencias del compilador -->
+          <showWarnings>true</showWarnings>
+	  
+        </configuration>
+
+      </plugin>
+
+      <!-- Ejecutar las pruebas unitarias con JUnit 5 -->
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>3.2.5</version>
+      </plugin>
+
+      <!-- Empaqueta las clases compiladas en un JAR -->
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+	
+	<configuration>
+
+	  <!-- Guarda el JAR junto al pom.xml -->
+	  <outputDirectory>${project.basedir}</outputDirectory>
+	  
+	  <archive>
+	    <manifest>
+	      
+	      <!-- Clase que contiene el metodo main -->
+	      <mainClass>Main</mainClass>
+
+	      <!-- Registrar las dependencias en el manifiesto -->
+	      <addClasspath>true</addClasspath>
+
+	      <!-- Carpeta donde se encuantran las bibliotecas -->
+	      <classpathPrefix>lib/</classpathPrefix>
+	      
+	    </manifest>
+	  </archive>
+	</configuration>
+      </plugin>
+
+      <!-- Copiar las dependencias necesarias para ejecutar -->
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<version>3.6.1</version>
+	
+	<executions>
+	  <execution>
+	    
+	    <!-- Copiar dependencias durante mvn package -->
+	    <phase>package</phase>
+	    
+	    <goals>
+              <goal>copy-dependencies</goal>
+	    </goals>
+	    
+	    <configuration>
+	      
+              <!-- Guarda las bibliotecas en lib/ -->
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+	      
+              <!-- No copia bibliotecas exclusivas de pruebas -->
+              <includeScope>runtime</includeScope>
+	      
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+      
+    </plugins>
+    
+  </build>
+  
+  <dependencies>
+    <!-- Biblioteca para leer archivos JSON -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+
+    <!-- Biblioteca para realizar pruebas unitarias -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.11.0</version>
+      <scope>test</scope>
+    </dependency>
+    
+  </dependencies>
+
 </project>
