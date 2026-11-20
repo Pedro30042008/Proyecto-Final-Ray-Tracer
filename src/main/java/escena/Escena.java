@@ -30,6 +30,7 @@ public class Escena {
     private final List<Objeto3D> objetos;
 
     
+    
     /**
      * Constructor de una escena.
      * 
@@ -40,14 +41,14 @@ public class Escena {
      * @param luzAmbiental  Intensidad de la luz ambiental de la escena.
      * @param luces Lista de luces puntuales.
      * @param objetos  Lista de los objetos en la escena.
-     */
-    public Escena(int ancho, int alto, Camara camara, VectorR3 fondo, double luzAmbiental,List<JsonObject> luces, List<Objeto3D> objetos) {
-        
-        /*No crearemos escenas con ancho o alto, negativos o 0 */
-        if (ancho <= 0 || alto <= 0) {
-            throw new IllegalArgumentException("Las dimensiones de la imagen deben ser positivas.");
+    */
+   public Escena(int ancho, int alto, Camara camara, VectorR3 fondo, double luzAmbiental,List<JsonObject> luces, List<Objeto3D> objetos) {
+       
+       /*No crearemos escenas con ancho o alto, negativos o 0 */
+       if (ancho <= 0 || alto <= 0) {
+           throw new IllegalArgumentException("Las dimensiones de la imagen deben ser positivas.");
         }
-
+        
         this.ancho = ancho;
         this.alto = alto;
         this.camara = camara;
@@ -56,25 +57,41 @@ public class Escena {
         this.luces = List.copyOf(luces);
         this.objetos = List.copyOf(objetos);
     }
-
+    
     public int getAncho() {
         return ancho;
     }
-
+    
     public int getAlto() {
         return alto;
     }
-
+    
     @Override
     public String toString() {
         return "Escena {\n"
-                + "  Dimensiones: " + ancho + " x " + alto + "\n"
-                + "  Camara: " + camara + "\n"
-                + "  Fondo: " + fondo + "\n"
-                + "  Luz ambiental: " + luzAmbiental + "\n"
-                + "  Luces puntuales: " + luces + "\n"
-                + "  Objetos: " + objetos + "\n"
-                + "}";
+        + "  Dimensiones: " + ancho + " x " + alto + "\n"
+        + "  Camara: " + camara + "\n"
+        + "  Fondo: " + fondo + "\n"
+        + "  Luz ambiental: " + luzAmbiental + "\n"
+        + "  Luces puntuales: " + luces + "\n"
+        + "  Objetos: " + objetos + "\n"
+        + "}";
     }
-
+    
+    /*Getters */
+    public Camara getCamara() {
+        return camara;
+    }
+    
+    public VectorR3 getFondo() {
+        return fondo;
+    }
+    
+    public double getLuzAmbiental() {
+        return luzAmbiental;
+    }
+    
+    public List<Objeto3D> getObjetos() {
+        return objetos;
+    }
 }
