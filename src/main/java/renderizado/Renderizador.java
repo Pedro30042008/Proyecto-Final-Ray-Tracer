@@ -71,7 +71,6 @@ public class Renderizador {
             }
         }
 
-
         /* Si no hubo intersección, devolver el color de fondo. */
         if (interseccionCercana == null) {
             return escena.getFondo();
