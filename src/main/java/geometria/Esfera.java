@@ -26,21 +26,13 @@ public class Esfera extends Objeto3D {
     public Esfera(VectorR3 centro, double radio, VectorR3 color) {
 	// Invocamos el constructor padre dado un color.
 	super(color);
-	
-	// Verificamos que el centro sea distinto de null.
-	if (centro == null)
-	    throw new IllegalArgumentException("El centro debe ser un punto bien definido.");
-
-	// Validamos el rayo.
-	double radioValidado = Verificador.verificarNumero(radio, "El radio debe ser un número finito real: " + radio);
-	
-	// Verificamos que el radio esté bien definido.
-	if (radioValidado <= 0)
-	    throw new IllegalArgumentException("El radio debe ser mayor a 0.");
-
 	// Asignamos los datos de la esfera.
-	this.centro = centro;
-	this.radio = radioValidado;
+	this.centro = Verificador.verificarNotNull(centro, "El centro de la esfera ddebe ser distinto de null.");
+	// Verificamos el radio y lo asignamos.
+        this.radio = Verificador.verificarPositivo(radio, "El radio debe ser un número finito.", "El radio debe ser positivo o cero.");
+	// Verificamos que el radio sea mayor a 0.
+	if (this.radio == 0)
+	    throw new IllegalArgumentException("El radio debe ser mayor a 0.");
     }
 
     /**
@@ -65,9 +57,14 @@ public class Esfera extends Objeto3D {
      * Modifica el radio de la esfera.
      *
      * @param radio nuevo radio de la esfera.
+     * @throws IllegalArgumentException si el radio es cero.
      */
     public void setRadio(double radio) {
-        this.radio = radio;
+	// Verificamos el radio y lo asignamos.
+        this.radio = Verificador.verificarPositivo(radio, "El radio debe ser un número finito.", "El radio debe ser positivo o cero.");
+        // Verificamos que el radio sea mayor a 0.
+	if (this.radio == 0)
+	    throw new IllegalArgumentException("El radio debe ser mayor a 0.");
     }
 
     /**
@@ -76,7 +73,8 @@ public class Esfera extends Objeto3D {
      * @param centro nuevo punto donde se localiza el centro de la esfera.
      */
     public void setCentro(VectorR3 centro) {
-        this.centro = centro;
+	// Verificamos el centro y lo asignamos.
+        this.centro = Verificador.verificarNotNull(centro, "El centro de la esfera debe ser distinto de null.");
     }
     
     /**
@@ -90,8 +88,7 @@ public class Esfera extends Objeto3D {
     @Override
     public Interseccion intersectar(Rayo rayo) {
 	// Verificamos que el rayo sea distinto de null.
-	if (rayo == null)
-	    throw new IllegalArgumentException("El rayo debe ser distinto de null.");
+	Verificador.verificarNotNull(rayo, "El rayo debe ser distinto de null.");
 	
 	// Obtenemos los datos del rayo.
 	VectorR3 origen = rayo.getOrigen();
@@ -150,5 +147,18 @@ public class Esfera extends Objeto3D {
 	    
 	// Devolvemos la intersección.
 	return new Interseccion(t, punto, normal);
+    }
+
+    /**
+     * Produce una representación en cadena de texto del vector.
+     *
+     * @return String que representa al vector.
+     */
+    @Override
+    public String toString() {
+	// Cadena de texto para guardar la representación de la esfera.
+	String esfera = "{'tipo': Esfera, 'centro': " + this.centro + ", 'radio': " + this.radio + ", 'color': " + this.color + "}";
+	// Regresamos la representación de la esfera.
+	return esfera;
     }
 }

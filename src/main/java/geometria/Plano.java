@@ -25,18 +25,11 @@ public class Plano extends Objeto3D {
     public Plano(VectorR3 normal, VectorR3 punto, VectorR3 color) {
 	// Constructor padre.
 	super(color);
-	
-	// Verificamos que no sean null los argumentos.
-	if (normal == null || punto == null)
-	    throw new IllegalArgumentException("El vector normal y el punto deben ser distintos de null.");
-	
-	// Verificamos que la normal no sea el vector cero.
-	if (normal.esCero())
-	    throw new IllegalArgumentException("El vector normal al plano debe ser distinto de cero.");
-	
-	// Asignamos los datos.
-	this.normal = normal;
-	this.punto = punto;
+	// Verificamos los datos y los asignamos.
+	this.normal = Verificador.verificarVectorCero(normal,
+						      "El vector normal al plano debe ser distinto de null",
+						      "El vector normal al plano debe ser distinto del vector cero.");
+	this.punto = Verificador.verificarNotNull(punto, "El punto perteneciente al plano debe ser distinto de null.");
     }
 
     /**
@@ -64,7 +57,8 @@ public class Plano extends Objeto3D {
      * @param punto nuevo punto perteneciente al plano.
      */
     public void setPunto(VectorR3 punto) {
-	this.punto = punto;
+	// Verificamos el punto y lo asignamos.
+	this.punto = Verificador.verificarNotNull(punto, "El punto perteneciente al plano debe ser distinto de null.");
     }
 
     /**
@@ -74,7 +68,10 @@ public class Plano extends Objeto3D {
      * @param normal nuevo vector normal al plano.
      */
     public void setNormal(VectorR3 normal) {
-        this.normal = normal;
+	// Verificamos la normal y la asignamos.
+        this.normal = Verificador.verificarVectorCero(normal,
+						      "El vector normal al plano debe ser distinto de null",
+						      "El vector normal al plano debe ser distinto del vector cero.");
     }
     
     /**
@@ -88,9 +85,8 @@ public class Plano extends Objeto3D {
      */
     @Override
     public Interseccion intersectar(Rayo rayo) {
-	// Verificamos que el rayo sea distinto de null.
-	if (rayo == null)
-	    throw new IllegalArgumentException("El rayo debe ser distinto de null.");
+        // Verificamos que el rayo sea distinto de null.
+	Verificador.verificarNotNull(rayo, "El rayo debe ser distinto de null.");
 	
 	// Obtenemos los datos del rayo.
 	VectorR3 origen = rayo.getOrigen();
@@ -120,5 +116,18 @@ public class Plano extends Objeto3D {
 	
 	// Retornamos la intersección.
 	return new Interseccion(t, pInterseccion, this.normal);
+    }
+
+    /**
+     * Produce una representación en cadena de texto del vector.
+     *
+     * @return String que representa al vector.
+     */
+    @Override
+    public String toString() {
+	// Cadena de texto para guardar la representación del plano.
+	String plano = "{'tipo': Plano, 'punto': " + this.punto + ", 'normal': " + this.normal + ", 'color': " + this.color + "}";
+	// Regresamos la representación del plano.
+	return plano;
     }
 }
