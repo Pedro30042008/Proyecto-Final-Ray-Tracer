@@ -22,3 +22,7 @@ classpath.txt
 auto-save-list/
 
 .DS_Store
+
+# Ignorar carpeta lib y archivos JAR generados
+lib/
+*.jar

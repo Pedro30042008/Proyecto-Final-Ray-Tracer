@@ -1,5 +1,6 @@
 
 # Proyecto Final: Ray Tracer
+V2
 
 Proyecto final de Modelado y Programación.
 
@@ -15,26 +16,8 @@ El programa permitirá cargar escenas desde archivos JSON,
 calcular intersecciones, iluminación y sombras, y distribuir
 el renderizado entre múltiples hilos.
 
-Ejecución provisional
+Compilacion y ejecucion
+mvn clean package
 
-Durante la primera etapa, el programa permite recibir argumentos desde la terminal, leer un archivo JSON y validar su contenido.
+java -jar raytracer.jar escena.json salida.ppm [--trabajadores N]
 
-Primero, compilar y ejecutar las pruebas:
-
-mvn clean test
-
-Después, generar el archivo con las rutas de las dependencias:
-
-mvn dependency:build-classpath -Dmdep.outputFile=classpath.txt
-
-Finalmente, ejecutar:
-
-java -cp "target/classes:$(cat classpath.txt)" Main \
-src/test/resources/escenas/prueba_dimensiones_IMPL-COMPLETAcorr.json \
-salida.ppm \
---trabajadores 1
-
-
-Para ejecutar la prueba del escritor PPM
-mvn clean test
-java -cp target/test-classes:target/classes io.PruebaVisualPPM

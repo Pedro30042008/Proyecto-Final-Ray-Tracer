@@ -154,7 +154,7 @@
 	    <configuration>
 	      
               <!-- Guarda las bibliotecas en lib/ -->
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <outputDirectory>${project.basedir}/lib</outputDirectory>
 	      
               <!-- No copia bibliotecas exclusivas de pruebas -->
               <includeScope>runtime</includeScope>
