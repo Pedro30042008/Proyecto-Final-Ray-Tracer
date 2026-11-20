@@ -17,8 +17,9 @@ public class LuzPuntual {
      * Construye una luz puntual con su posición e intensidad.
      *
      * @param posicion posición de la luz en R3.
-     * @param intensidad intensidad de la fuente luminosa.
-     * @throws IllegalArgumentException si los parámetros no son válidos.
+     * @param intensidad intensidad de la luz entre 0 y 1.
+     * @throws IllegalArgumentException si la posición es nula
+     *         o la intensidad no es finita o está fuera de [0, 1].
      */
     public LuzPuntual(VectorR3 posicion, double intensidad) {
 
@@ -28,10 +29,11 @@ public class LuzPuntual {
                     "La posición de la luz no puede ser null.");
         }
 
-        /* Validar que la intensidad sea finita y no negativa. */
-        if (intensidad < 0 || !Double.isFinite(intensidad)) {
+       /* Validar que la intensidad sea finita y esté entre 0 y 1. */
+        if (!Double.isFinite(intensidad) ||
+                intensidad < 0 || intensidad > 1) {
             throw new IllegalArgumentException(
-                    "La intensidad debe ser finita y no negativa.");
+                    "La intensidad debe estar entre 0 y 1.");
         }
 
         /* Guardar los atributos. */
