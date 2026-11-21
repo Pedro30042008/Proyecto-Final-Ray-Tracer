@@ -3,6 +3,7 @@ package renderizado;
 
 import escena.Escena;
 import camara.Camara;
+import iluminacion.LuzPuntual;
 import matematicas.Rayo;
 import matematicas.VectorR3;
 import geometria.Objeto3D;
@@ -76,9 +77,79 @@ public class Renderizador {
             return escena.getFondo();
         }
 
-        /* Si hubo intersección, devolver el color del objeto. */
-        return objetoCercano.getColor();
+        /*Si hubo intersección, calculamos la ilumniación usando lambert
+        * Devolvemos el color con la iluminación */
+        return calcularIluminacion(objetoCercano, interseccionCercana);
     }
+
+
+    /**
+     * Calcula el color de una superficie considerando
+     * iluminación ambiental y difusa de Lambert.
+     *
+     * @param objeto objeto intersectado.
+     * @param interseccion intersección del rayo con el objeto.
+     * @return color RGB limitado al intervalo [0, 1].
+     */
+    private VectorR3 calcularIluminacion(
+            Objeto3D objeto, Interseccion interseccion) {
+
+        /* Obtener el color original del objeto. */
+        VectorR3 colorObjeto = objeto.getColor();
+
+        /* Obtener la intensidad ambiental. */
+        double ambiental = escena.getLuzAmbiental();
+
+        /* Obtener el punto y la normal de la superficie. */
+        VectorR3 punto = interseccion.getPunto();
+        VectorR3 normal = interseccion.getNormal();
+
+        /* Comenzar con la contribución de la luz ambiental. */
+        double iluminacionTotal = ambiental;
+
+        /* Recorrer las luces puntuales. */
+        for (LuzPuntual luz : escena.getLucesPuntuales()) {
+
+            /* Obtener la posición de la luz. */
+            VectorR3 posicionLuz = luz.getPosicion();
+
+            /* Calcular el vector desde el punto hacia la luz. */
+            VectorR3 direccionLuz = posicionLuz.resta(punto);
+
+            /* Ignorar esta luz si coincide con el punto de intersección. */
+            if (direccionLuz.esCero()) {
+                continue;
+            }
+
+            /* Obtener el vector unitario que apunta hacia la luz. */
+            VectorR3 L = direccionLuz.vectorUnitario();
+
+            /* Calcular el producto punto entre la normal y la luz. */
+            double productoPuntoNL = normal.productoPunto(L);
+
+            /* Evitar contribuciones negativas. */
+            double factorDifuso = Math.max(0, productoPuntoNL);
+
+            /* Calcular el color con iluminación ambiental y difusa
+             * Contribución = I*max{0, N.L}*/
+            double contribucion =  luz.getIntensidad() * factorDifuso;
+
+            /* Acumular la contribución de esta luz. */
+            iluminacionTotal = iluminacionTotal + contribucion;
+        }
+
+        /* Aplicar la iluminación al color del objeto. */
+        VectorR3 colorFinal =
+                colorObjeto.productoPorUnEscalar(iluminacionTotal);
+
+        /* Limitar cada componente RGB. */
+        double rojo = Math.min(1, Math.max(0, colorFinal.getX()));
+        double verde = Math.min(1, Math.max(0, colorFinal.getY()));
+        double azul = Math.min(1, Math.max(0, colorFinal.getZ()));
+
+        return new VectorR3(rojo, verde, azul);
+    }
+
 
     /**
      * Calcula los colores de todos los píxeles de la imagen.
