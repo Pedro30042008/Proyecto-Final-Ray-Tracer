@@ -110,12 +110,15 @@ public class Plano extends Objeto3D {
 	// Obtenemos el punto de la intersección.
         VectorR3 pInterseccion = rayo.puntoEnT(t);
 
+	// Normal resultante de la intersección rayo-plano.
+	VectorR3 normalPlanoRayo = new VectorR3(this.normal);
+	
 	// Verificamos si toca desde la cara "frontal" o "posterior".
 	if (direccion.productoPunto(this.normal) > 0)
-	    this.normal = this.normal.productoPorUnEscalar(-1);
+	    normalPlanoRayo = this.normal.productoPorUnEscalar(-1);
 	
 	// Retornamos la intersección.
-	return new Interseccion(t, pInterseccion, this.normal);
+	return new Interseccion(t, pInterseccion, normalPlanoRayo);
     }
 
     /**
