@@ -114,6 +114,26 @@ public class TestEsfera {
 	assertEquals(centro, esfera.getCentro());
 	assertEquals(radio, esfera.getRadio());
 	assertEquals(color, esfera.getColor());
+
+	// Esfera con radio cero no está bien definida.
+        assertThrows(IllegalArgumentException.class,
+		     () -> esfera.setRadio(0));
+	
+	// Esfera con radio negativo no está bien definida.
+        assertThrows(IllegalArgumentException.class,
+		     () -> esfera.setRadio(-1));
+	
+	// Esfera con centro null no está bien definida.
+        assertThrows(IllegalArgumentException.class,
+		     () -> esfera.setCentro(null));
+
+	// Esfera con color null no está bien definida.
+        assertThrows(IllegalArgumentException.class,
+		     () -> esfera.setColor(null));
+
+	// Esfera con color fuera de rango [0-1] no está bien definida.
+        assertThrows(IllegalArgumentException.class,
+		     () -> esfera.setColor(new VectorR3(1.2, 0.3, 0.2)));
     }
     
     /**
@@ -156,8 +176,6 @@ public class TestEsfera {
 	    "1, 1, 1, 0.5, 0.5, 0.70710678118654752440, 1.5, 1.5, 1.70710678118654752440, -0.5, -0.5, -0.70710678118654752440, 1",
 	    // Rayo con dos intersecciones con la esfera. (Origen del rayo afuera de la esfera)
 	    "-3, -3, -4.65685424949238019520, 0.5, 0.5, 0.70710678118654752440, 0.5, 0.5, 0.29289321881345247560, -0.5, -0.5, -0.70710678118654752440, 7",
-	    // Rayo con una intersección con la esfera. (Origen del rayo es parte de la esfera)
-	    "0, 1, 1, 0, 2, 2, 0, 1, 1, -1, 0, 0, 0",
 	    // Rayo con una intersección con la esfera. (Origen del rayo afuera de la esfera)
 	    "0, 0, 0, 0, 2, 2, 0, 1, 1, -1, 0, 0, 0.5"
     })
@@ -207,7 +225,9 @@ public class TestEsfera {
 	    // Rayo con 'una interseccion' detrás del origen del rayo.
 	    "10, 1, 0, 1, 0, 0",
 	    // Rayo con 'dos intersecciones' detrás del origen del rayo.
-	    "10, 1, 1, 1, 0, 0"
+	    "10, 1, 1, 1, 0, 0",
+	    // Rayo con una intersección con la esfera en t = 0. (Origen del rayo es parte de la esfera)
+	    "0, 1, 1, 0, 2, 2"
     })
     public void testSinInterseccionValida(double xOrigen, double yOrigen, double zOrigen, double xDireccion, double yDireccion, double zDireccion) {
 	// Datos del rayo.
