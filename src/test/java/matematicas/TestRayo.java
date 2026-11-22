@@ -101,6 +101,24 @@ public class TestRayo {
         // Verificamos las componentes del origen y la dirección.
         assertEquals(origen, rayo.getOrigen());
         assertEquals(direccion, rayo.getDireccion());
+
+	// Verificamos que el origen no pueda ser null.
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> rayo.setOrigen(null)
+		     );
+
+        // Verificamos que la dirección no pueda ser null.
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> rayo.setDireccion(null)
+		     );
+
+        // Verificamos que la dirección no pueda ser el vector cero.
+        assertThrows(
+		     IllegalArgumentException.class,
+		     () -> rayo.setDireccion(new VectorR3(0, 0, 0))
+		     );
     }
     
     /**
