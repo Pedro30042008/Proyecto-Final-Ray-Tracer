@@ -104,7 +104,7 @@ public class Plano extends Objeto3D {
         double t = Verificador.verificarNumero(this.punto.resta(origen).productoPunto(this.normal) / denominador, "Operación para calcular t con desbordamiento.");
 
 	// Verificamos que t pueda observarse.
-	if (t < 0)
+	if (t <= 1e-6)
 	    return null;
 	
 	// Obtenemos el punto de la intersección.

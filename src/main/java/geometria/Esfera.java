@@ -61,10 +61,12 @@ public class Esfera extends Objeto3D {
      */
     public void setRadio(double radio) {
 	// Verificamos el radio y lo asignamos.
-        this.radio = Verificador.verificarPositivo(radio, "El radio debe ser un número finito.", "El radio debe ser positivo o cero.");
+        double r = Verificador.verificarPositivo(radio, "El radio debe ser un número finito.", "El radio debe ser positivo o cero.");
         // Verificamos que el radio sea mayor a 0.
-	if (this.radio == 0)
+	if (r == 0)
 	    throw new IllegalArgumentException("El radio debe ser mayor a 0.");
+	// Asignamos el radio.
+	this.radio = r;
     }
 
     /**
@@ -124,11 +126,11 @@ public class Esfera extends Objeto3D {
 	double t;
 	
 	// Si tMenor es positivo o cero.
-	if (tMenor >= 0)
+	if (tMenor > 1e-6)
 	    // La primera intersección es con tMenor.
 	    t = tMenor;
 	// Si tMayor es positivo o cero.
-	else if (tMayor >= 0)
+	else if (tMayor > 1e-6)
 	    // La primera intersección es con tMayor.
 	    t = tMayor;
 	// Ambas soluciones están detrás del origen del rayo.
