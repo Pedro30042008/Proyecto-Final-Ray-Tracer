@@ -28,17 +28,9 @@ public class Rayo {
      *         <code>null</code> o si la dirección es el vector cero.
      */
     public Rayo(VectorR3 origen, VectorR3 direccion) {
-        // Verificamos que los argumentos no sean nulos.
-        if (origen == null || direccion == null)
-            throw new IllegalArgumentException("El origen y la dirección no pueden ser null.");
-
-        // Verificamos que la dirección sea distinta del vector cero.
-        if (direccion.esCero())
-            throw new IllegalArgumentException("El vector de dirección debe ser distinto del vector cero.");
-
-        // Guardamos los vectores; no pueden modificarse porque VectorR3 es inmutable.
-        this.origen = origen;
-        this.direccion = direccion;
+        // Verificamos los datos y los guardamos.
+        this.origen = Verificador.verificarNotNull(origen, "El origen no pueden ser null.");
+        this.direccion = Verificador.verificarVectorCero(direccion, "La dirección no pueden ser null.", "El vector de dirección debe ser distinto del vector cero.");
     }
 
     /**
@@ -65,7 +57,8 @@ public class Rayo {
      * @param origen nuevo vector que representa el punto de origen del rayo.
      */
     public void setOrigen(VectorR3 origen) {
-        this.origen = origen;
+	// Verificamos el parámetro y lo asignamos.
+        this.origen = Verificador.verificarNotNull(origen, "El origen no pueden ser null.");
     }
 
     /**
@@ -74,7 +67,8 @@ public class Rayo {
      * @param direccion nuevo vector que determina la dirección del rayo.
      */
     public void setDireccion(VectorR3 direccion) {
-        this.direccion = direccion;
+	// Verificamos el parámetro y lo asignamos.
+        this.direccion = Verificador.verificarVectorCero(direccion, "La dirección no pueden ser null.", "El vector de dirección debe ser distinto del vector cero.");
     }
     
     /**
