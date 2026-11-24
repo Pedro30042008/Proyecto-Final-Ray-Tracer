@@ -7,6 +7,8 @@ import camara.Camara;
 import geometria.Objeto3D;
 import matematicas.VectorR3;
 import iluminacion.LuzPuntual;
+import geometria.Esfera;
+import geometria.Plano;
 
 /**
  * Representa la información de una escena tridimensional.
@@ -82,15 +84,85 @@ public class Escena {
         return alto;
     }
     
+    public static String representacionLuces(List<LuzPuntual> luces){
+
+        if(luces == null){
+            throw new IllegalArgumentException("Luces no puden ser null");
+        }
+        if(luces.isEmpty())
+            return "[]";
+
+        StringBuilder sb = new StringBuilder();
+        
+
+        int i = 1;
+        for(LuzPuntual luzActual : luces){
+
+            if(luzActual == null){
+             continue;   
+            }
+
+            sb.append("     "+i+". ");
+            sb.append("Posición: "+luzActual.getPosicion()+"\n");
+            sb.append("        Intensidad: "+luzActual.getIntensidad()+"\n");
+            i++;
+        }
+        
+        return sb.toString();
+
+    }
+
+    public static String representacionObjetos(List<Objeto3D> objetos){
+
+        if(objetos == null){
+            throw new IllegalArgumentException("Objetos no puden ser null");
+        }
+        if(objetos.isEmpty())
+            return "[]";
+
+        StringBuilder sb = new StringBuilder();
+        
+
+        int i = 1;
+        for(Objeto3D objetoActual : objetos){
+
+            if(objetoActual == null){
+             continue;   
+            }
+
+            if(objetoActual instanceof Esfera){
+                Esfera esfera = (Esfera) objetoActual;
+                sb.append("     "+i+". Esfera\n");
+                sb.append("        Centro: "+esfera.getCentro()+"\n");
+                sb.append("        Radio: "+esfera.getRadio()+"\n");
+                sb.append("        Color: "+esfera.getColor()+"\n");
+            }
+
+            if(objetoActual instanceof Plano){
+                Plano plano = (Plano) objetoActual;
+                sb.append("     "+i+". Plano\n");
+                sb.append("        Normal: "+plano.getNormal()+"\n");
+                sb.append("        Punto: "+plano.getPunto()+"\n");
+                sb.append("        Color: "+plano.getColor()+"\n");
+            }
+            
+            i++;
+        }
+        
+        return sb.toString();
+
+    }
+
+
     @Override
     public String toString() {
         return "Escena {\n"
         + "  Dimensiones: " + ancho + " x " + alto + "\n"
         + "  Camara: " + camara + "\n"
         + "  Fondo: " + fondo + "\n"
-        + "  Luz ambiental: " + luzAmbiental + "\n"
-        + "  Luces puntuales: " + luces + "\n"
-        + "  Objetos: " + objetos + "\n"
+        + "  Luz ambiental:" + luzAmbiental + "\n"
+        + "  Luces puntuales:[\n" + representacionLuces(luces) + "        ]\n"
+        + "  Objetos:[\n" + representacionObjetos(objetos) + "        ]\n"
         + "}";
     }
     
