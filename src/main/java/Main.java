@@ -1,17 +1,18 @@
-import java.io.IOException;
-
-import escena.Escena;
+import io.LectorArgsTerminal;
 import io.LectorEscenaJson;
 import io.EscritorPPM;
+
+import renderizado.RenderizadorConcurrente;
 import renderizado.Renderizador;
 import matematicas.VectorR3;
-import renderizado.RenderizadorConcurrente;
+import escena.Escena;
+
+import java.io.IOException;
 
 /**
  * MAIN
- * Recibe los argumentos de ejecución, valida su formato
- * y coordina la lectura de la escena.
- * 
+ * Recibe los argumentos de ejecución, crea un LectorArgsTerminal
+ * para validarlos y coordina el trabajo del Ray Tracer.
  */
 public class Main {
 
@@ -24,74 +25,22 @@ public class Main {
     * @param cositas argumentos de ejecución.
     */
     public static void main(String[] cositas) {
+	/* Construimos un lector de argumentos en terminal. */
+	LectorArgsTerminal lector = new LectorArgsTerminal(cositas);
 
-        /*  Verificamos que se reciban minimo 2 argumentos (.json y .ppm).
-            y maximo 4 (todos)
-            */
-        if (cositas.length < 2 || cositas.length > 4) {
-            System.err.println("Uso: java -jar raytracer.jar escena.json salida.ppm [--trabajadores N]");
-            return;
-        }
+	/* Obtenemos los datos leídos por el lector. */
+	String archivoJSON = lector.getArchivoJSON();
+	String archivoPPM = lector.getArchivoPPM();
+	int trabajadores = lector.getNumTrabajadores();
 
-        /*  Obtenemos rutas de entrada y salida.*/
-        String rutaEntrada = "";
-        String rutaSalida = "";
-        /*Por default tendremo 1 trabjador, se cambiara si el usuario los especifica 
-            probaremos max 8*/
-        int trabajadores = 1 ;
-        boolean trabajadoresIndicados = false;
-        /*Recorremos el arreglo cositas para obtener los argumentos */
-        try {
-            
-            for(int i = 0; i < cositas.length ; i++){
-                String actual = cositas [i];
-
-                if(actual == null || actual.isEmpty()){
-                    throw new IllegalArgumentException("No puede haber argumentos null o vacios");
-                }else if (actual.endsWith(".json")){
-                    if (!rutaEntrada.isEmpty()) {
-                        throw new IllegalArgumentException("Se proporcionó más de una ruta JSON.");
-                    }
-                    rutaEntrada = cositas[i];
-                } else if (actual.endsWith(".ppm")){
-                    if (!rutaSalida.isEmpty()) {
-                        throw new IllegalArgumentException("Se proporcionó más de una ruta PPM.");
-                    }
-                    rutaSalida = cositas[i];
-                }else if (actual.equals("--trabajadores")){
-                    if (trabajadoresIndicados) {
-                        throw new IllegalArgumentException("La opción --trabajadores no puede repetirse.");
-                    }
-                    if (i + 1 >= cositas.length) {
-                        throw new IllegalArgumentException("Debe especificarse un número después de --trabajadores.");
-                    }
-                    trabajadores = Integer.parseInt(cositas[i+1]);
-                    trabajadoresIndicados = true;
-                    i++;
-                }else {
-                    throw new IllegalArgumentException("Argumento no reconocido: " + actual);
-                }
-            }
-
-            if (rutaEntrada.equals("")){
-                throw new IllegalArgumentException("Sin ruta de entrada.");
-            }
-            if (rutaSalida.equals("")){
-                throw new IllegalArgumentException("Sin ruta de salida.");
-            }
-            if (trabajadores < 1 || trabajadores > 8){
-                throw new IllegalArgumentException("Los trabjadores deben de estar entre 1 y 8");
-            }
-            /* 
-            Escena escena = LectorEscenaJson.leer(rutaEntrada);
-            System.out.println(escena);
-            */
-
+	/* Intentamos leer el archivoJON y escribirlo en archivoPPM. */
+	try {
             /* Leemos y construimos la escena desde el archivo JSON. */
-            Escena escena = LectorEscenaJson.leer(rutaEntrada);
+            Escena escena = LectorEscenaJson.leer(archivoJSON);
 
-            System.out.println(escena);
-            
+	    /* Verificamos que se haya leido la escena correctamente. */
+	    System.out.println(escena);
+	    
             /* Creamos el renderizador concurrente. */
             RenderizadorConcurrente renderizador = new RenderizadorConcurrente(escena);
 
@@ -99,20 +48,22 @@ public class Main {
             VectorR3[][] pixeles = renderizador.renderizar(trabajadores);
             
             /* Escribimos los colores en un archivo PPM P3. */
-            EscritorPPM.escribir(rutaSalida, pixeles);
-            
-            System.out.println("Imagen generada correctamente: " + rutaSalida);
+            EscritorPPM.escribir(archivoPPM, pixeles);
+	    
+	    /* Operación exitosa.*/
+            System.out.println("Imagen generada correctamente: " + archivoPPM);
 
-
-        } catch (NumberFormatException e) {
-            System.err.println("El número de trabajadores debe ser un entero.");
-        } catch (IOException | IllegalArgumentException e) {
-            System.err.println("Error: " + e.getMessage());
-        }catch (InterruptedException e) {
+	/* Problemas en la lectura o escritura de archivos. */
+        } catch (IOException e) {
+	    /* Notificamos el problema y teerminamos. */
+	    System.err.println("Error: " + e.getMessage());
+	    System.exit(1);
+	/* Ocurrio un error con el trabajo de los hilos. */
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.err.println("El renderizado fue interrumpido.");
         }
 
-        
     }//FIN MAIN
+    
 }//FIN CLASS
