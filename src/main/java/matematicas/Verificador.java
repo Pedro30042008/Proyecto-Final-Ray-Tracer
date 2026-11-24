@@ -119,7 +119,7 @@ public class Verificador {
     }
 
     /**
-     * Metodo auxiliar paara verificar que no sea el vector cero.
+     * Metodo auxiliar para verificar que no sea el vector cero.
      *
      * @param vector vector a verificar que no sea el vector cero.
      * @param mensaje1 texto lanzado si es <code>null</code> el vector.

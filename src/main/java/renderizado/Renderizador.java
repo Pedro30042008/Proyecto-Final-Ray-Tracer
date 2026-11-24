@@ -1,4 +1,3 @@
-
 package renderizado;
 
 import escena.Escena;
@@ -93,7 +92,7 @@ public class Renderizador {
      */
     private VectorR3 calcularIluminacion(
             Objeto3D objeto, Interseccion interseccion) {
-
+	
         /* Obtener el color original del objeto. */
         VectorR3 colorObjeto = objeto.getColor();
 
@@ -121,9 +120,15 @@ public class Renderizador {
                 continue;
             }
 
-            /* Obtener el vector unitario que apunta hacia la luz. */
-            VectorR3 L = direccionLuz.vectorUnitario();
+	    /* Verificamos si debe haber sombra. */
+	    if (esSombra(new Rayo(punto, direccionLuz))) {
+		/* No afectamos a la suma. */
+		continue;
+	    }
 
+	    /* Obtener el vector unitario que apunta hacia la luz. */
+            VectorR3 L = direccionLuz.vectorUnitario();
+	    
             /* Calcular el producto punto entre la normal y la luz. */
             double productoPuntoNL = normal.productoPunto(L);
 
@@ -151,6 +156,28 @@ public class Renderizador {
     }
 
 
+    /**
+     * Método auxiliar para verificar si el objeto tiene sombra con una luz.
+     *
+     * @param rayoSombra rayo que va del punto de intereccion a la luz, donde
+     *                   si t es igual a 1, intersectamos la luz.
+     * @return <code>true</code> si t se encuentra en el intervalo (0 - 1),
+     *         <code>false</code> en otro caso.
+     */
+    private boolean esSombra(Rayo rayoSombra){
+	// Si hay algun obstaculo entre la figura y la luz.
+	for (Objeto3D objeto : escena.getObjetos()) {
+	    // Referenciamos la intersección a guardar si hay un obstáculo entre la figura y la luz.
+	    Interseccion interseccion = objeto.intersectar(rayoSombra);
+	    // Si hubo una intersección que estuviera entre la luz y el punto de intersección.
+	    if (interseccion != null && interseccion.getT() < 1 - 1e-6)
+		// Devolvemos true.
+		return true;
+	}
+	// Devolvemos false al no encontrar intersecciones con otras figuras.
+	return false;
+    }
+    
     /**
      * Calcula los colores de todos los píxeles de la imagen.
      *
