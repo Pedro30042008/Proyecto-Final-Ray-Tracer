@@ -51,7 +51,7 @@ public class RenderizadorConcurrente {
 
         /* Creamos la matriz compartida de píxeles. */
         VectorR3[][] pixeles = new VectorR3[alto][ancho];
-
+ 
         /* Evitamos tener más trabajadores que filas. */
         int trabajadoresEfectivos = Math.min(trabajadores, alto);
 

@@ -4,7 +4,8 @@ import escena.Escena;
 import io.LectorEscenaJson;
 import io.EscritorPPM;
 import renderizado.Renderizador;
-import matematicas.VectorR3;    
+import matematicas.VectorR3;
+import renderizado.RenderizadorConcurrente;
 
 /**
  * MAIN
@@ -91,11 +92,11 @@ public class Main {
 
             System.out.println(escena);
             
-            /* Creamos el renderizador con la escena obtenida. */
-            Renderizador renderizador = new Renderizador(escena);
-            
-            /* Renderizamos la escena y obtenemos los colores de los píxeles. */
-            VectorR3[][] pixeles = renderizador.renderizar();
+            /* Creamos el renderizador concurrente. */
+            RenderizadorConcurrente renderizador = new RenderizadorConcurrente(escena);
+
+            /* Renderizamos utilizando el número solicitado de trabajadores. */
+            VectorR3[][] pixeles = renderizador.renderizar(trabajadores);
             
             /* Escribimos los colores en un archivo PPM P3. */
             EscritorPPM.escribir(rutaSalida, pixeles);
@@ -107,6 +108,9 @@ public class Main {
             System.err.println("El número de trabajadores debe ser un entero.");
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
+        }catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("El renderizado fue interrumpido.");
         }
 
         
