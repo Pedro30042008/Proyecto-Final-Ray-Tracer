@@ -60,19 +60,19 @@ public class TestPlano {
 	
 	// Objeto3D valida el color recibido mediante super(color).
         assertThrows(IllegalArgumentException.class,
-				() -> new Plano(normal, punto, null));
+		     () -> new Plano(normal, punto, null));
 
 	// La normal del plano no puede ser null.
         assertThrows(IllegalArgumentException.class,
-				() -> new Plano(null, punto, color));
+		     () -> new Plano(null, punto, color));
 	
 	// El plano debe contener un punto bien definido.
         assertThrows(IllegalArgumentException.class,
-				() -> new Plano(normal, null, color));
+		     () -> new Plano(normal, null, color));
 	
 	// No se puede definir la orientación del plano con la normal cero.
         assertThrows(IllegalArgumentException.class,
-				() -> new Plano(new VectorR3(0, 0, 0), punto, color));
+		     () -> new Plano(new VectorR3(0, 0, 0), punto, color));
     }
 
     /**
@@ -110,6 +110,22 @@ public class TestPlano {
 	assertEquals(normal, plano.getNormal());
 	assertEquals(punto, plano.getPunto());
 	assertEquals(color, plano.getColor());
+
+	// Objeto3D valida el color recibido mediante super(color).
+        assertThrows(IllegalArgumentException.class,
+		     () -> plano.setNormal(null));
+
+	// La normal del plano no puede ser null.
+        assertThrows(IllegalArgumentException.class,
+		     () -> plano.setNormal(new VectorR3(0, 0, 0)));
+	
+	// El plano debe contener un punto bien definido.
+        assertThrows(IllegalArgumentException.class,
+		     () -> plano.setPunto(null));
+	
+	// No se puede definir la orientación del plano con la normal cero.
+        assertThrows(IllegalArgumentException.class,
+		     () -> plano.setColor(null));
     }
     
     /**
@@ -155,9 +171,7 @@ public class TestPlano {
 	    // Rayo no paralelo a la normal del plano. (Cara Frontal)
 	    "0, 12, 12, 0, -24, -24, 0, 0, 0, 1, 1, 1, 0.5",
 	    // Rayo no paralelo a la normal del plano. (Cara Posterior)
-	    "0, -12, -12, 0, 24, 24, 0, 0, 0, -1, -1, -1, 0.5",
-	    // Rayo con intersección en t = 0. (Primer valor del parámetro t válido)
-	    "8, -4, -4, 1, 1, 1, 8, -4, -4, -1, -1, -1, 0",
+	    "0, -12, -12, 0, 24, 24, 0, 0, 0, -1, -1, -1, 0.5"
     })
     public void testConInterseccionValida(double xOrigen, double yOrigen, double zOrigen,
 					  double xDireccion, double yDireccion, double zDireccion,
@@ -205,7 +219,9 @@ public class TestPlano {
 	    // Rayo con intersecciones infinitas. (Contenido en el plano)
 	    "8, -4, -4, 16, -8, -8",
 	    // Rayo con 'intersección' detrás del origen del mismo. (Intersección que no se ve)
-	    "0, 12, 12, 0, 24, 24"
+	    "0, 12, 12, 0, 24, 24",
+	     // Rayo con intersección en t = 0 no se toma en cuenta. (Primer valor del parámetro t invalido)
+	    "8, -4, -4, 1, 1, 1",
     })
     public void testSinInterseccionValida(double xOrigen, double yOrigen, double zOrigen,
 					  double xDireccion, double yDireccion, double zDireccion) {
@@ -219,7 +235,7 @@ public class TestPlano {
         // Verificamos que no exista una intersección válida del rayo con el plano.
         assertNull(plano.intersectar(rayo));
     }
-
+    
     /**
      * Método auxiliar para verificar la intersección existente que debe
      * presentar un rayo y un plano, dando tolerancia a los valores
