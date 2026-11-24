@@ -77,7 +77,7 @@ public class Renderizador {
         }
 
         /*Si hubo intersección, calculamos la ilumniación usando lambert
-        * Devolvemos el color con la iluminación */
+         * Devolvemos el color con la iluminación */
         return calcularIluminacion(objetoCercano, interseccionCercana);
     }
 
@@ -92,7 +92,7 @@ public class Renderizador {
      */
     private VectorR3 calcularIluminacion(
             Objeto3D objeto, Interseccion interseccion) {
-	
+
         /* Obtener el color original del objeto. */
         VectorR3 colorObjeto = objeto.getColor();
 
@@ -120,15 +120,15 @@ public class Renderizador {
                 continue;
             }
 
-	    /* Verificamos si debe haber sombra. */
-	    if (esSombra(new Rayo(punto, direccionLuz))) {
-		/* No afectamos a la suma. */
-		continue;
-	    }
+            /* Verificamos si debe haber sombra. */
+            if (esSombra(new Rayo(punto, direccionLuz))) {
+                /* No afectamos a la suma. */
+                continue;
+            }
 
-	    /* Obtener el vector unitario que apunta hacia la luz. */
+            /* Obtener el vector unitario que apunta hacia la luz. */
             VectorR3 L = direccionLuz.vectorUnitario();
-	    
+
             /* Calcular el producto punto entre la normal y la luz. */
             double productoPuntoNL = normal.productoPunto(L);
 
@@ -165,28 +165,25 @@ public class Renderizador {
      *         <code>false</code> en otro caso.
      */
     private boolean esSombra(Rayo rayoSombra){
-	// Si hay algun obstaculo entre la figura y la luz.
-	for (Objeto3D objeto : escena.getObjetos()) {
-	    // Referenciamos la intersección a guardar si hay un obstáculo entre la figura y la luz.
-	    Interseccion interseccion = objeto.intersectar(rayoSombra);
-	    // Si hubo una intersección que estuviera entre la luz y el punto de intersección.
-	    if (interseccion != null && interseccion.getT() < 1 - 1e-6)
-		// Devolvemos true.
-		return true;
-	}
-	// Devolvemos false al no encontrar intersecciones con otras figuras.
-	return false;
+        // Si hay algun obstaculo entre la figura y la luz.
+        for (Objeto3D objeto : escena.getObjetos()) {
+            // Referenciamos la intersección a guardar si hay un obstáculo entre la figura y la luz.
+            Interseccion interseccion = objeto.intersectar(rayoSombra);
+            // Si hubo una intersección que estuviera entre la luz y el punto de intersección.
+            if (interseccion != null && interseccion.getT() < 1 - 1e-6)
+                // Devolvemos true.
+                return true;
+        }
+        // Devolvemos false al no encontrar intersecciones con otras figuras.
+        return false;
     }
-    
+
     /**
      * Calcula los colores de todos los píxeles de la imagen.
      *
      * @return matriz de colores RGB organizada por filas y columnas.
      */
     public VectorR3[][] renderizar() {
-
-        /* Obtener la cámara de la escena. */
-        Camara camara = escena.getCamara();
 
         /* Obtener las dimensiones de la imagen. */
         int ancho = escena.getAncho();
@@ -195,22 +192,79 @@ public class Renderizador {
         /* Crear la matriz de píxeles. */
         VectorR3[][] pixeles = new VectorR3[alto][ancho];
 
+        /* Validar la matriz antes de renderizar. */
+        validarMatriz(pixeles);
+
         /* Recorrer todas las filas. */
-        for(int fila = 0; fila < alto; fila++){
-            /* Recorrer todas las columnas. */
-            for(int columna = 0; columna < ancho; columna++){
+        renderizarFilas(0, alto, pixeles);
 
-                /* Generar el rayo correspondiente. */
-                Rayo rayo = camara.generarRayo(fila, columna);
-
-                /* Calcular el color del rayo. */
-                VectorR3 color = calcularColor(rayo);
-
-                /* Guardar el color en la matriz. */
-                pixeles[fila][columna] = color;
-            }
-        }
         /* Devolver la matriz completa. */
         return pixeles;
     }
+
+    /**
+     * Calcula los colores de un intervalo de filas.
+     *
+     * @param filaInicio primera fila que se procesa.
+     * @param filaFin primera fila que no se procesa.
+     * @param pixeles matriz donde se guardan los colores.
+     */
+    void renderizarFilas(
+            int filaInicio,
+            int filaFin,
+            VectorR3[][] pixeles) {
+
+        /* Obtener la cámara y el ancho de la imagen. */
+        Camara camara = escena.getCamara();
+        int ancho = escena.getAncho();
+
+        /* Recorrer únicamente las filas asignadas. */
+        for (int fila = filaInicio; fila < filaFin; fila++) {
+
+            /* Recorrer todas las columnas de cada fila. */
+            for (int columna = 0; columna < ancho; columna++) {
+
+                /* Generar el rayo del píxel. */
+                Rayo rayo = camara.generarRayo(fila, columna);
+
+                /* Calcular el color correspondiente. */
+                VectorR3 color = calcularColor(rayo);
+
+                /* Guardar el color en la matriz compartida. */
+                pixeles[fila][columna] = color;
+            }
+        }
+    }
+
+
+    /**
+     * Verifica que la matriz de píxeles tenga las
+     * dimensiones correspondientes a la escena.
+     *
+     * @param pixeles matriz que se desea validar.
+     * @throws IllegalArgumentException si la matriz
+     *         es nula o sus dimensiones son incorrectas.
+     */
+    void validarMatriz(VectorR3[][] pixeles) {
+
+        int alto = escena.getAlto();
+        int ancho = escena.getAncho();
+
+        /* Validar que la matriz exista y tenga la altura correcta. */
+        if (pixeles == null || pixeles.length != alto) {
+            throw new IllegalArgumentException(
+                    "La matriz no tiene la altura correcta.");
+        }
+
+        /* Validar que todas las filas tengan el ancho correcto. */
+        for (int fila = 0; fila < alto; fila++) {
+            if (pixeles[fila] == null ||
+                    pixeles[fila].length != ancho) {
+                throw new IllegalArgumentException(
+                        "La matriz no tiene el ancho correcto.");
+            }
+        }
+    }
+
 }
+
