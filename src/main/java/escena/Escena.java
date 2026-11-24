@@ -172,7 +172,7 @@ public class Escena {
     }
     
     public VectorR3 getFondo() {
-        return fondo;
+        return new VectorR3(fondo);
     }
     
     public double getLuzAmbiental() {
