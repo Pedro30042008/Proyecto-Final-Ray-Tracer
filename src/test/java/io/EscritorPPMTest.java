@@ -257,7 +257,16 @@ public class EscritorPPMTest {
         "0.5, 0.5, 1.1"
     })
 
-    
+    /**
+     * Test
+     * Prueba parametrizada que verifica que se 
+     * rechacen pixeles fuera del intervalo [0,1]
+     * 
+     * Seguiremos el modelo Arrange–Act–Assert.
+     * @param rojo
+     * @param verde
+     * @param azul
+     */
     public void debeRechazarColorFueraDeRango(double rojo, double verde, double azul) {
 
         // Arrange
