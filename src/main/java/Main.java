@@ -4,7 +4,7 @@ import escena.Escena;
 import io.LectorEscenaJson;
 import io.EscritorPPM;
 import renderizado.Renderizador;
-import matematicas.VectorR3;
+import matematicas.VectorR3;    
 
 /**
  * MAIN
@@ -90,17 +90,17 @@ public class Main {
             Escena escena = LectorEscenaJson.leer(rutaEntrada);
 
             System.out.println(escena);
-
+            
             /* Creamos el renderizador con la escena obtenida. */
             Renderizador renderizador = new Renderizador(escena);
-
+            
             /* Renderizamos la escena y obtenemos los colores de los píxeles. */
             VectorR3[][] pixeles = renderizador.renderizar();
-
+            
             /* Escribimos los colores en un archivo PPM P3. */
             EscritorPPM.escribir(rutaSalida, pixeles);
-
-            System.out.println("Imagen generada correctamente: " + rutaSalida);
+            
+            System.out.println("IImagen generada correctamente: " + rutaSalida);
 
 
         } catch (NumberFormatException e) {
