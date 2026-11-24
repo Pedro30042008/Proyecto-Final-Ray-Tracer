@@ -100,7 +100,7 @@ public class Main {
             /* Escribimos los colores en un archivo PPM P3. */
             EscritorPPM.escribir(rutaSalida, pixeles);
             
-            System.out.println("IImagen generada correctamente: " + rutaSalida);
+            System.out.println("Imagen generada correctamente: " + rutaSalida);
 
 
         } catch (NumberFormatException e) {
