@@ -111,7 +111,8 @@ public class LectorArgsTerminal {
 	    verificarDatos();
 	/* Error en la conversión del número de trabajadores. */
 	} catch (NumberFormatException e) {
-	    System.err.println("El número de trabajadores debe ser un entero.");
+	    System.err.println("Error: El número de trabajadores debe ser un entero.");
+	    System.exit(1);
 	/* Error en algún argumento en la terminal. */
 	} catch (IllegalArgumentException e) {
 	    /* Notificamos el problema y terminamos. */

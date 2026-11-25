@@ -62,6 +62,7 @@ public class Main {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.err.println("El renderizado fue interrumpido.");
+	    System.exit(1);
         }
 
     }//FIN MAIN
