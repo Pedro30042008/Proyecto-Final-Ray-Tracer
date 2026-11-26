@@ -192,9 +192,6 @@ public class Renderizador {
         /* Crear la matriz de píxeles. */
         VectorR3[][] pixeles = new VectorR3[alto][ancho];
 
-        /* Validar la matriz antes de renderizar. */
-        validarMatriz(pixeles);
-
         /* Recorrer todas las filas. */
         renderizarFilas(0, alto, pixeles);
 
@@ -209,10 +206,7 @@ public class Renderizador {
      * @param filaFin primera fila que no se procesa.
      * @param pixeles matriz donde se guardan los colores.
      */
-    void renderizarFilas(
-            int filaInicio,
-            int filaFin,
-            VectorR3[][] pixeles) {
+    public void renderizarFilas(int filaInicio, int filaFin, VectorR3[][] pixeles) {
 
         /* Obtener la cámara y el ancho de la imagen. */
         Camara camara = escena.getCamara();
@@ -235,36 +229,5 @@ public class Renderizador {
             }
         }
     }
-
-
-    /**
-     * Verifica que la matriz de píxeles tenga las
-     * dimensiones correspondientes a la escena.
-     *
-     * @param pixeles matriz que se desea validar.
-     * @throws IllegalArgumentException si la matriz
-     *         es nula o sus dimensiones son incorrectas.
-     */
-    void validarMatriz(VectorR3[][] pixeles) {
-
-        int alto = escena.getAlto();
-        int ancho = escena.getAncho();
-
-        /* Validar que la matriz exista y tenga la altura correcta. */
-        if (pixeles == null || pixeles.length != alto) {
-            throw new IllegalArgumentException(
-                    "La matriz no tiene la altura correcta.");
-        }
-
-        /* Validar que todas las filas tengan el ancho correcto. */
-        for (int fila = 0; fila < alto; fila++) {
-            if (pixeles[fila] == null ||
-                    pixeles[fila].length != ancho) {
-                throw new IllegalArgumentException(
-                        "La matriz no tiene el ancho correcto.");
-            }
-        }
-    }
-
 }
 
