@@ -198,6 +198,11 @@ public class LectorArgsTerminal {
 	    /* Lanzamos excepcion al no poder trabajar con cero trabajadores. */
 	    throw new IllegalArgumentException("El número de trabajadores debe ser mayor a cero.");
 
+	/* Si el número de trabajadores es mayor al indicado.  */
+	if (numTrabajadores > 8)
+	    /* Lanzamos excepcion al no poder trabajar con cero trabajadores. */
+	    throw new IllegalArgumentException("El número de trabajadores debe ser a lo más 8.");
+	
 	/* Asignamos el número de trabajadores. */
 	this.numTrabajadores = numTrabajadores;
 	
