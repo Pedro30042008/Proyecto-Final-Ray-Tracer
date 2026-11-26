@@ -54,7 +54,7 @@ public class Main {
             System.out.println("Imagen generada correctamente: " + archivoPPM);
 
 	/* Problemas en la lectura o escritura de archivos. */
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
 	    /* Notificamos el problema y teerminamos. */
 	    System.err.println("Error: " + e.getMessage());
 	    System.exit(1);
