@@ -1,6 +1,6 @@
 package io;
 
-//Clases con las que trabajamos
+// Clases con las que trabajamos
 import escena.Escena;
 import matematicas.VectorR3;
 import geometria.Objeto3D;
@@ -9,16 +9,18 @@ import geometria.Plano;
 import camara.Camara;
 import iluminacion.LuzPuntual;
 
-//Biblioteca para leer JSON
+// Biblioteca para leer JSON
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonArray;
-//Biblioteca para leer y excepcion
+
+// Biblioteca para leer y excepcion
 import java.io.FileReader;
 import java.io.IOException;
-/*Biblioteca para listas */
+
+// Biblioteca para listas
 import java.util.ArrayList;
 import java.util.List;
 

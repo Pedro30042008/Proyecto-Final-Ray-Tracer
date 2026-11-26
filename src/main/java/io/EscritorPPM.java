@@ -96,7 +96,8 @@ public class EscritorPPM {
      * Comprueba que un color cumpla con estar entre 0 y 1.
      * 
      * @param color vector que almacena el color.
-     * @return True -> Color invalido, False -> Colo valido
+     * @return <code>true</code> si el color es invalido,
+     *         <coded>false</code> en otro caso.
      */
     private static boolean comprobadorColorInvalido(VectorR3 color){
         /* Comprobamos cada componente*/

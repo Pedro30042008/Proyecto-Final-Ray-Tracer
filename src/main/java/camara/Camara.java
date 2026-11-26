@@ -18,6 +18,7 @@ public class Camara {
     private VectorR3 miraA;
     /* Ángulo de visión que abarca la cámara horizontalmente. */
     private double fov;
+    private double fovGrados;
 
     /* Distancia de la cámara al viewport. */
     private double distanciaViewport = 1.0;
@@ -86,6 +87,7 @@ public class Camara {
 	/* Asignamos los datos de la cámara. */ 
         this.posicion = new VectorR3(posicion);
         this.miraA = new VectorR3(miraA);
+	this.fovGrados = fov;
         this.fov = Math.toRadians(fov); // Convertimos el FOV de grados a radianes.
 	
 	/* Asignamos las dimensiones de la imagen. */
@@ -220,5 +222,24 @@ public class Camara {
 
         /* Devolver el Rayo. */
         return new Rayo(new VectorR3(this.posicion), direccion);
+    }
+
+    /**
+     * Produce una representación en cadena de texto de la cámara.
+     *
+     * @return cadena dde texto que representa la cámara.
+     */
+    @Override
+    public String toString() {
+	// Cadena de texto para guardar la representación de la cámara.
+	StringBuilder camara = new StringBuilder();
+
+	// Formato de la cámara.
+        camara.append("        Posición: "+ this.posicion +"\n");
+        camara.append("        Mira_a: "+ this.miraA +"\n");
+        camara.append("        FOV: "+ this.fovGrados +"°");
+
+	// Regresamos la representación de la camara.
+	return camara.toString();
     }
 }

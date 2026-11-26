@@ -59,4 +59,22 @@ public class LuzPuntual {
     public double getIntensidad() {
         return intensidad;
     }
+
+    /**
+     * Produce una representación en cadena de texto de la luz puntual.
+     *
+     * @return cadena de texto que representa la luz puntual.
+     */
+    @Override
+    public String toString() {
+	// Cadena de texto para guardar la representación de la luz puntual.
+	StringBuilder luzPuntual = new StringBuilder();
+	
+	// Formato de la luz puntual.
+	luzPuntual.append("Posicion: "+ this.posicion + "\n");
+	luzPuntual.append("        Intensidad: "+ this.intensidad + "\n");
+	
+	// Regresamos la representación de la luz puntual.
+	return luzPuntual.toString();
+    }
 }

@@ -122,15 +122,22 @@ public class Plano extends Objeto3D {
     }
 
     /**
-     * Produce una representación en cadena de texto del vector.
+     * Produce una representación en cadena de texto del plano.
      *
-     * @return String que representa al vector.
+     * @return cadena de texto que representa al plano.
      */
     @Override
     public String toString() {
 	// Cadena de texto para guardar la representación del plano.
-	String plano = "{'tipo': Plano, 'punto': " + this.punto + ", 'normal': " + this.normal + ", 'color': " + this.color + "}";
+	StringBuilder plano = new StringBuilder();
+
+	// Formato de la esfera
+        plano.append("Plano\n");
+        plano.append("        Normal: "+ this.normal +"\n");
+        plano.append("        Punto: "+ this.punto +"\n");
+        plano.append("        Color: "+ this.color +"\n");
+
 	// Regresamos la representación del plano.
-	return plano;
+	return plano.toString();
     }
 }

@@ -152,15 +152,22 @@ public class Esfera extends Objeto3D {
     }
 
     /**
-     * Produce una representación en cadena de texto del vector.
+     * Produce una representación en cadena de texto de la esfera.
      *
-     * @return String que representa al vector.
+     * @return cadena de texto que representa la esfera.
      */
     @Override
     public String toString() {
 	// Cadena de texto para guardar la representación de la esfera.
-	String esfera = "{'tipo': Esfera, 'centro': " + this.centro + ", 'radio': " + this.radio + ", 'color': " + this.color + "}";
+	StringBuilder esfera = new StringBuilder();
+
+	// Formato de la esfera
+        esfera.append("Esfera\n");
+	esfera.append("        Centro: "+ this.centro +"\n");
+	esfera.append("        Radio: "+ this.radio +"\n");
+	esfera.append("        Color: "+ this.color +"\n");
+
 	// Regresamos la representación de la esfera.
-	return esfera;
+	return esfera.toString();
     }
 }

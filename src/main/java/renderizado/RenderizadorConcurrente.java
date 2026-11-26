@@ -20,13 +20,12 @@ public class RenderizadorConcurrente {
      * @param escena escena que será renderizada.
      */
     public RenderizadorConcurrente(Escena escena) {
-
-        if (escena == null) {
+	/* Verificamos que la escena sea distinta de null. */
+        if (escena == null)
             throw new IllegalArgumentException(
-                "La escena no puede ser null."
-            );
-        }
-
+                "La escena no puede ser null.");
+	    
+	/* Asignamos los datos de manera correcta. */
         this.escena = escena;
         this.renderizador = new Renderizador(escena);
     }
@@ -89,16 +88,15 @@ public class RenderizadorConcurrente {
         for (Thread hilo : hilos) {
             hilo.join();
         }
-
+	
         /* Comprobamos si algún trabajador falló. */
         for (RuntimeException error : errores) {
             if (error != null) {
                 throw new IllegalStateException("Ocurrió un error durante el renderizado.",error);
             }
         }
-
+	
         /* Todos terminaron correctamente. */
         return pixeles;
-        }
-
+    }
 }
