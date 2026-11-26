@@ -1,8 +1,9 @@
 package escena;
-/*Clase lista para objetos3D y luces. */
+
+/* Clase lista para objetos3D y luces. */
 import java.util.List;
 
-/*Clases que necesita escena como atributis */
+/* Clases que necesita escena como atributos. */
 import camara.Camara;
 import geometria.Objeto3D;
 import matematicas.VectorR3;
@@ -47,26 +48,23 @@ public class Escena {
     */
    public Escena(int ancho, int alto, Camara camara, VectorR3 fondo, double luzAmbiental,List<LuzPuntual> luces, List<Objeto3D> objetos) {
        
-       /*Comprobaciones basicas para evitar una mala construccion de una escena*/
-       if (ancho <= 0 || alto <= 0) {
+       /* Comprobaciones basicas para evitar una mala construccion de una escena. */
+       if (ancho <= 0 || alto <= 0)
            throw new IllegalArgumentException("Las dimensiones de la imagen deben ser positivas.");
-        }
-        if (camara == null) {
+       
+        if (camara == null)
             throw new IllegalArgumentException("La cámara no puede ser null.");
-        }
 
-        if (fondo == null) {
+        if (fondo == null)
             throw new IllegalArgumentException("El fondo no puede ser null.");
-        }
 
-        if (!Double.isFinite(luzAmbiental) || luzAmbiental < 0 || luzAmbiental > 1) {
+        if (!Double.isFinite(luzAmbiental) || luzAmbiental < 0 || luzAmbiental > 1)
             throw new IllegalArgumentException("La luz ambiental debe estar entre 0 y 1.");
-        }
 
-        if (luces == null || objetos == null) {
+        if (luces == null || objetos == null)
             throw new IllegalArgumentException("Las listas de luces y objetos no pueden ser null.");
-        }
 
+	/* Asignación de datos verificados. */
         this.ancho = ancho;
         this.alto = alto;
         this.camara = camara;
@@ -75,114 +73,173 @@ public class Escena {
         this.luces = List.copyOf(luces);
         this.objetos = List.copyOf(objetos);
     }
-    
+
+    /**
+     * Método para obtener el ancho de la imagen de la escena.
+     *
+     * @return el ancho de la imagen de la escena.
+     */
     public int getAncho() {
-        return ancho;
+        return this.ancho;
     }
-    
+
+    /**
+     * Método para obtener el alto de la imagen de la escena.
+     *
+     * @return el alto de la imagen de la escena.
+     */
     public int getAlto() {
-        return alto;
-    }
-    
-    public static String representacionLuces(List<LuzPuntual> luces){
-
-        if(luces == null){
-            throw new IllegalArgumentException("Luces no puden ser null");
-        }
-        if(luces.isEmpty())
-            return "[]";
-
-        StringBuilder sb = new StringBuilder();
-        
-
-        int i = 1;
-        for(LuzPuntual luzActual : luces){
-
-            if(luzActual == null){
-             continue;   
-            }
-
-            sb.append("     "+i+". ");
-            sb.append("Posición: "+luzActual.getPosicion()+"\n");
-            sb.append("        Intensidad: "+luzActual.getIntensidad()+"\n");
-            i++;
-        }
-        
-        return sb.toString();
-
+        return this.alto;
     }
 
-    public static String representacionObjetos(List<Objeto3D> objetos){
-
-        if(objetos == null){
-            throw new IllegalArgumentException("Objetos no puden ser null");
-        }
-        if(objetos.isEmpty())
-            return "[]";
-
-        StringBuilder sb = new StringBuilder();
-        
-
-        int i = 1;
-        for(Objeto3D objetoActual : objetos){
-
-            if(objetoActual == null){
-             continue;   
-            }
-
-            if(objetoActual instanceof Esfera){
-                Esfera esfera = (Esfera) objetoActual;
-                sb.append("     "+i+". Esfera\n");
-                sb.append("        Centro: "+esfera.getCentro()+"\n");
-                sb.append("        Radio: "+esfera.getRadio()+"\n");
-                sb.append("        Color: "+esfera.getColor()+"\n");
-            }
-
-            if(objetoActual instanceof Plano){
-                Plano plano = (Plano) objetoActual;
-                sb.append("     "+i+". Plano\n");
-                sb.append("        Normal: "+plano.getNormal()+"\n");
-                sb.append("        Punto: "+plano.getPunto()+"\n");
-                sb.append("        Color: "+plano.getColor()+"\n");
-            }
-            
-            i++;
-        }
-        
-        return sb.toString();
-
-    }
-
-
-    @Override
-    public String toString() {
-        return "Escena {\n"
-        + "  Dimensiones: " + ancho + " x " + alto + "\n"
-        + "  Camara: " + camara + "\n"
-        + "  Fondo: " + fondo + "\n"
-        + "  Luz ambiental:" + luzAmbiental + "\n"
-        + "  Luces puntuales:[\n" + representacionLuces(luces) + "        ]\n"
-        + "  Objetos:[\n" + representacionObjetos(objetos) + "        ]\n"
-        + "}";
-    }
-    
-    /*Getters */    
+    /**
+     * Método para obtener la cámara de la escena.
+     *
+     * @return la cámara de la escena.
+     */
     public Camara getCamara() {
-        return camara;
+        return this.camara;
     }
-    
+
+    /**
+     * Método para obtener el color del fondo de la imagen.
+     *
+     * @return el color del fondo de la imagen.
+     */
     public VectorR3 getFondo() {
         return new VectorR3(fondo);
     }
-    
+
+    /**
+     * Método para obtener la intensidad de la luz ambiental en la escena.
+     *
+     * @return la intensidad de la luz ambiental en la escena.
+     */
     public double getLuzAmbiental() {
-        return luzAmbiental;
+        return this.luzAmbiental;
+    }
+
+    /**
+     * Método para obtener la lista de objetos en la escena.
+     *
+     * @return lista de objetos en la escena.
+     */
+    public List<Objeto3D> getObjetos() {
+        return this.objetos;
+    }
+
+    /**
+     * Método para obtener la lista de luces puntuales en la escena.
+     *
+     * @return lista de luces puntales en la escena.
+     */
+    public List<LuzPuntual> getLucesPuntuales(){
+        return this.luces;
     }
     
-    public List<Objeto3D> getObjetos() {
-        return objetos;
+    /**
+     * Devuelve una representación en cadena de texto para la lista de
+     * luces obtenida del archivo JSON.
+     *
+     * @param luces lista de luces putuales.
+     * @return representación en cadena de texto de la lista de luces.
+     * @throws IllegalArgumentException si la lista es <code>null</code>.
+     */
+    public static String representacionLuces(List<LuzPuntual> luces){
+	/* Si la lista de luces no es distinta de null. */
+        if(luces == null)
+	    /* Lanzamos la excepción correspondiente. */
+            throw new IllegalArgumentException("Luces no puden ser null");
+	
+	/* Si la lista de luces esta vacía. */
+        if(luces.isEmpty())
+	    /* Regresamos la lista vacía. */
+            return "[]";
+
+	/* Cadena de texto para guardar la lista de luces. */
+        StringBuilder sb = new StringBuilder();
+        
+        /* Contador de luces. */
+        int i = 1;
+
+	/* Recorremos la lista de luces. */
+        for(LuzPuntual luzActual : luces){
+
+	    /* Si una luz es null. */
+            if(luzActual == null)
+		/* Ignoramos esta luz.*/
+		continue;
+
+	    /* Agregamos a la cadena de texto la i-esima luz. */
+            sb.append("     " + i + ". " + luzActual);
+	    
+	    /* Aumentamos el contador de luces. */
+            i++;
+        }
+
+	/* Regresamos la representación de texto para la lista de luces. */
+        return sb.toString();
     }
-    public List<LuzPuntual> getLucesPuntuales(){
-        return  luces;
+
+    /**
+     * Devuelve una representación en cadena de texto para la lista de
+     * objetos obtenida del archivo JSON.
+     *
+     * @param objetos lista de objetos.
+     * @return representación en cadena de texto de la lista de objetos.
+     * @throws IllegalArgumentException si la lista es <code>null</code>.
+     */
+    public static String representacionObjetos(List<Objeto3D> objetos){
+	/* Si la lista de objetos no es distinta de null. */
+        if(objetos == null)
+	    /* Lanzamos la excepción correspondiente. */
+            throw new IllegalArgumentException("Objetos no puden ser null");
+	
+	/* Si la lista está vacía. */
+        if(objetos.isEmpty())
+	    /* Regresamos la lista vacía. */
+            return "[]";
+
+	/* Cadena de texto para guardar la lista de objetos. */
+        StringBuilder sb = new StringBuilder();
+        
+	/* Contador de objetos. */
+        int i = 1;
+
+	/* Recorremos la lista de objetos. */
+        for(Objeto3D objetoActual : objetos){
+
+	    /* Si un objeto es null. */
+            if(objetoActual == null)
+		/* Ignoramos ese objeto. */
+		continue;   
+
+	    /* Agregamos a la cadena de texto el i-esimo objeto. */
+	    sb.append("     "+ i + ". " + objetoActual);
+
+	    /* Aumentamos el contador de objetos. */
+            i++;
+        }
+
+	/* Regresamos la representación de texto para la lista de objetos. */
+        return sb.toString();
     }
+
+    /**
+     * Devuelve la representación en cadena de texto de la escena.
+     *
+     * @return cadena de texto que representa la escena.
+     */
+    @Override
+    public String toString() {
+	/* Retornamos la representación en cadena de texto de la escena. */
+        return "Escena {\n"
+	    + "  Dimensiones: " + ancho + " x " + alto + "\n"
+	    + "  Camara: \n" + camara + "\n"
+	    + "  Fondo: " + fondo + "\n"
+	    + "  Luz ambiental: " + luzAmbiental + "\n"
+	    + "  Luces puntuales:[\n" + representacionLuces(luces) + "        ]\n"
+	    + "  Objetos:[\n" + representacionObjetos(objetos) + "        ]\n"
+	    + "}";
+    }    
 }
