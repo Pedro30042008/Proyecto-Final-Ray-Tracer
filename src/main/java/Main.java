@@ -44,8 +44,20 @@ public class Main {
             /* Creamos el renderizador concurrente. */
             RenderizadorConcurrente renderizador = new RenderizadorConcurrente(escena);
 
+            /* Registramos el instante inicial del renderizado. */
+            long inicio = System.nanoTime();
+
             /* Renderizamos utilizando el número solicitado de trabajadores. */
             VectorR3[][] pixeles = renderizador.renderizar(trabajadores);
+
+            /* Registramos el instante final del renderizado. */
+            long fin = System.nanoTime();
+
+            /* Convertimos el tiempo transcurrido de nanosegundos a segundos. */
+            double tiempo = (fin - inicio) / 1_000_000_000.0;
+
+            /* Mostramos el tiempo de renderizado. */
+            System.out.printf("Tiempo de renderizado: %.3f s%n", tiempo);
             
             /* Escribimos los colores en un archivo PPM P3. */
             EscritorPPM.escribir(archivoPPM, pixeles);

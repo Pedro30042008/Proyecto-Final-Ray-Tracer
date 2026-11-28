@@ -1,0 +1,163 @@
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[conference,letterpaper,10pt]{IEEEtran} 
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\definecolor{azulUNAM}{HTML}{182C50}
+\definecolor{turquesa}{HTML}{168D87}
+\definecolor{grisGrafica}{HTML}{82909F}
+\definecolor{grisTexto}{HTML}{536173}
+\usepackage{graphicx}
+
+\title{\LARGE \bf
+Reporte de rendimiento\\
+Ray Tracer
+}
+
+\author{\IEEEauthorblockN{Equipo Compumagos\\Alan Alvarez, Pedro Pablo, Fernanda Miranda}
+\IEEEauthorblockA{Facultad de Ciencias, Universidad Nacional Autónoma de México\\
+Modelado y Programación}}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\section{INTRODUCCIÓN}
+Se desarrollo un proyecto de Ray tracer, encargado de leer, interpretar, renderizar y escribir
+imagenes PPM (P3). Este reporte explicara y mostrara el rendimineto
+respecto a una escena \texttt{escena\_rendimiento.json}, de 8 objetos, a 400 x 225 píxeles, tiempo de renderizado con 1,2,4 y 8 trabajadores.
+Veremos el SpeedUp y la interpretacion de ley de Amdahl.
+El tiempo se midió con \texttt{System.nanoTime()} alrededor
+de la llamada \texttt{renderizar}. Por tanto, incluye el cálculo
+y la coordinación de hilos, pero excluye la lectura del JSON
+y la escritura del PPM.
+
+
+\section{RESULTADOS}
+
+\vspace{-0.3em}
+\begin{table}[!ht]
+\centering
+\caption{Tiempos de renderizado en segundos y aceleración.}
+\label{tab:resultados}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.20}
+\begin{tabular}{@{}c r r r r r@{}}
+\toprule
+\(Trabajadores\) & \(T_1\) & \(T_2\) & \(T_3\) & \(\overline{T}_p\) & \(S(p)\) \\
+\midrule
+1 & 6.906 & 6.844 & 6.935 & \textbf{6.895} & 1.00 \\
+2 & 3.768 & 3.572 & 3.682 & \textbf{3.674} & 1.88 \\
+4 & 2.094 & 2.079 & 2.145 & \textbf{2.106} & 3.27 \\
+8 & 1.524 & 1.463 & 1.691 & \textbf{1.559} & 4.42 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\vspace{-1.0em}
+
+Las métricas se obtuvieron mediante:
+\begin{equation}
+\overline{T}_p=\frac{1}{3}\sum_{k=1}^{3}T_{p,k}, \qquad
+S(p)=\frac{\overline{T}_1}{\overline{T}_p}.
+\label{eq:speedup}
+\end{equation} 
+
+\(\overline{T}_p\): Tiempo promedio.
+\begin{itemize}
+  \item \(p\): número de trabajadores (\(1, 2, 4\) u \(8\)).
+  \item \(k\): número de ejecución (\(1, 2\) o \(3\)).
+  \item \(T_{p,k}\): tiempo obtenido utilizando \(p\) trabajadores en la ejecución \(k\).\\
+\end{itemize}
+\(S(p)  \): Aceleracion obtenida con \(p\) trabajadores
+\begin{itemize}
+  \item \(\overline{T}_1\): tiempo promedio con un solo trabajador.
+  \item \(\overline{T}_p\): tiempo promedio con \(p\) trabajadores.\\
+\end{itemize}
+
+Con ocho trabajadores, el tiempo promedio pasó de
+\textbf{6.895 s} a \textbf{1.559 s}, una reducción aproximada del \textbf{77.4\,\%}.\\
+Es decir, el renderizado es aproximadamente \textbf{4.42 veces más rápido}.
+
+
+\section{ANÁLISIS DE ACELERACIÓN}
+\vspace{-0.4em}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\columnwidth,
+    height=4.45cm,
+    xmin=0.7, xmax=8.4,
+    ymin=0, ymax=8.5,
+    xtick={1,2,4,8},
+    ytick={0,2,4,6,8},
+    xlabel={Número de trabajadores},
+    ylabel={Aceleración},
+    xlabel style={font=\footnotesize},
+    ylabel style={font=\footnotesize},
+    tick label style={font=\scriptsize, color=grisTexto},
+    axis line style={color=grisGrafica},
+    grid=major,
+    grid style={draw=gray!18},
+    legend style={font=\scriptsize,draw=none,fill=none,at={(0.03,0.98)},anchor=north west},
+    legend cell align=left,
+    clip=false
+]
+\addplot[gray!65,dashed,very thick,mark=none] coordinates {(1,1) (2,2) (4,4) (8,8)};
+\addlegendentry{Ideal: \(S(p)=p\)}
+\addplot[turquesa,very thick,mark=*,mark size=2.5pt] coordinates {(1,1) (2,1.8767) (4,3.2740) (8,4.4218)};
+\addlegendentry{Speedup observado}
+\end{axis}
+\end{tikzpicture}
+\vspace{-0.5em}
+\label{fig:speedup}
+\end{figure}
+\vspace{-1.0em}
+La gráfica compara la aceleración ideal con la obtenida experimentalmente. 
+Podemos observar que, al aumentar el número de trabajadores, el tiempo de renderizado disminuye y la aceleración aumenta.
+Sin embargo, nuestros resultados se alejan progresivamente de la aceleración ideal. 
+Por ejemplo, con ocho trabajadores obtuvimos una aceleración de 4.42 veces, en lugar de ocho.
+
+\section{LEY DE AMDAHL}
+La ley de Amdahl establece que, bajo un modelo de condiciones perfectas y que la cantidad de trabajo es constante
+sin contar los trabajadores que usemos, la aceleracion se limita por la fraccion secuencial.
+\begin{equation}
+S_{\mathrm{Amdahl}}(p)=\frac{1}{(1-f)+f/p},
+\label{eq:amdahl}
+\end{equation}
+
+donde $f$ representa la fracción paralelizable del programa, $1-f$ la fracción secuencial y $p$ el número de trabajadores.
+
+Como observamos en la gráfica, con ocho trabajadores obtuvimos una aceleración de $4.42\times$, en lugar de las $8\times$ que
+se alcanzarían en condiciones ideales.
+
+Esto ocurre porque no todo el trabajo puede paralelizarse. Además, la creación de hilos, la sincronización mediante
+\texttt{join()} y la planificación del procesador también pueden afectar el rendimiento. No medimos estos costos por
+separado, por lo que no podemos determinar cuánto contribuye cada uno a la diferencia observada.
+
+
+\section{CONCLUCIÓN}
+
+El paralelismo por filas redujo de forma notoria el tiempo de renderizado. No obstante, la ganancia fue
+decreciente: la eficiencia $S(p)/p$ pasó de \textbf{81.8\,\%}  con cuatro
+trabajadores a \textbf{55.3\,\%} con ocho, en concordancia con los
+límites del paralelismo.
+
+\addtolength{\textheight}{-12cm} 
+\end{document}
